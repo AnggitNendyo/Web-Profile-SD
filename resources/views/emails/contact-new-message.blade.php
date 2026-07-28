@@ -1,29 +1,28 @@
 <x-mail::message>
-# Pesan Kontak Baru
+    # Pesan Kontak Baru
 
-Yth. Admin,
+    Yth. Admin,
 
-Ada pesan kontak baru yang masuk melalui website:
+    Ada pesan kontak baru yang masuk melalui website:
 
-<x-mail::table>
-| Data | Keterangan |
-|:-----|:-----------|
-| **Nama** | {{ $contactMessage->name }} |
-| **Email** | {{ $contactMessage->email }} |
-| **Subjek** | {{ $contactMessage->subject }} |
-| **Waktu** | {{ $contactMessage->created_at->format('d/m/Y H:i') }} |
-</x-mail::table>
+    <x-mail::table>
+        | Data | Keterangan |
+        |:-----|:-----------|
+        | **Nama** | {{ $contactMessage->name }} |
+        | **Email** | {{ $contactMessage->email }} |
+        | **Subjek** | {{ $contactMessage->subject }} |
+        | **Waktu** | {{ $contactMessage->created_at->format('d/m/Y H:i') }} |
+    </x-mail::table>
 
-**Isi Pesan:**
+    **Isi Pesan:**
+    > {{ $contactMessage->message }}
 
-> {{ $contactMessage->message }}
+    <x-mail::button :url="url('/admin/pesan/' . $contactMessage->id)">
+        Lihat di Admin Panel
+    </x-mail::button>
 
-<x-mail::button :url="url('/admin/pesan/' . $contactMessage->id)">
-Lihat di Admin Panel
-</x-mail::button>
+    Anda dapat membalas langsung ke email pengirim: **{{ $contactMessage->email }}**
 
-Anda dapat membalas langsung ke email pengirim: **{{ $contactMessage->email }}**
-
-Salam,<br>
-{{ config('app.name') }}
+    Salam,<br>
+    {{ config('app.name') }}
 </x-mail::message>
