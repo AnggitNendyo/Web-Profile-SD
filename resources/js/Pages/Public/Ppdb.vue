@@ -80,7 +80,32 @@ const submitForm = () => {
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-6xl mx-auto">
                     <!-- Sidebar: Info PPDB -->
                     <div class="lg:col-span-4 space-y-8" data-aos="fade-right">
-                        
+
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-100 px-6 py-4 border-b border-slate-200">
+                                <h3 class="font-bold text-slate-800">Jalur Pendaftaran Aktif</h3>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <div v-for="setting in settings" :key="setting.id" class="border border-slate-100 rounded-xl p-4 bg-slate-50">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-bold text-indigo-700">{{ setting.jalur }}</h4>
+                                        <span class="text-xs font-semibold bg-indigo-100 text-indigo-600 px-2 py-1 rounded">
+                                            Kuota: {{ setting.kuota }}
+                                        </span>
+                                    </div>
+                                    <div class="text-sm text-slate-600 space-y-1">
+                                        <p><strong>TA:</strong> {{ setting.tahun_ajaran }}</p>
+                                        <p><strong>Buka:</strong> {{ new Date(setting.jadwal_buka).toLocaleDateString('id-ID') }}</p>
+                                        <p><strong>Tutup:</strong> {{ new Date(setting.jadwal_tutup).toLocaleDateString('id-ID') }}</p>
+                                    </div>
+                                </div>
+
+                                <div v-if="settings.length === 0" class="text-sm text-slate-500 text-center py-4">
+                                    Belum ada jalur pendaftaran yang dibuka saat ini.
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Cek Status CTA Card -->
                         <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
                             <div class="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
@@ -123,31 +148,6 @@ const submitForm = () => {
                                     </div>
                                 </li>
                             </ul>
-                        </div>
-                        
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                            <div class="bg-slate-100 px-6 py-4 border-b border-slate-200">
-                                <h3 class="font-bold text-slate-800">Jalur Pendaftaran Aktif</h3>
-                            </div>
-                            <div class="p-6 space-y-4">
-                                <div v-for="setting in settings" :key="setting.id" class="border border-slate-100 rounded-xl p-4 bg-slate-50">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h4 class="font-bold text-indigo-700">{{ setting.jalur }}</h4>
-                                        <span class="text-xs font-semibold bg-indigo-100 text-indigo-600 px-2 py-1 rounded">
-                                            Kuota: {{ setting.kuota }}
-                                        </span>
-                                    </div>
-                                    <div class="text-sm text-slate-600 space-y-1">
-                                        <p><strong>TA:</strong> {{ setting.tahun_ajaran }}</p>
-                                        <p><strong>Buka:</strong> {{ new Date(setting.jadwal_buka).toLocaleDateString('id-ID') }}</p>
-                                        <p><strong>Tutup:</strong> {{ new Date(setting.jadwal_tutup).toLocaleDateString('id-ID') }}</p>
-                                    </div>
-                                </div>
-                                
-                                <div v-if="settings.length === 0" class="text-sm text-slate-500 text-center py-4">
-                                    Belum ada jalur pendaftaran yang dibuka saat ini.
-                                </div>
-                            </div>
                         </div>
                     </div>
 

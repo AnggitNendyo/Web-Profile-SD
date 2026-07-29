@@ -9,40 +9,49 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     facilities: {
-        type: Array,
+        type: Object,
         required: true
     }
 });
 
 const columns = [
+    { key: 'photo', label: 'Foto' },
     { key: 'title', label: 'Nama Fasilitas' },
     { key: 'description', label: 'Deskripsi' },
-    { key: 'order_index', label: 'Urutan' },
-    { key: 'actions', label: 'Aksi', sortable: false }
+    { key: 'order_index', label: 'Urutan' }
 ];
 
 const showModal = ref(false);
 const editingId = ref(null);
 const showDeleteModal = ref(false);
 const itemToDelete = ref(null);
+const fileInput = ref(null);
+const imagePreview = ref(null);
 
 const form = useForm({
     title: '',
     description: '',
     icon: '',
+    photo: null,
     order_index: 0,
+    _method: 'POST',
 });
 
 const openModal = (facility = null) => {
+    form.reset();
+    form.clearErrors();
     if (facility) {
         editingId.value = facility.id;
         form.title = facility.title;
         form.description = facility.description;
         form.icon = facility.icon || '';
         form.order_index = facility.order_index || 0;
+        form._method = 'PUT';
+        imagePreview.value = facility.photo ? `/storage/${facility.photo}` : null;
     } else {
         editingId.value = null;
-        form.reset();
+        form._method = 'POST';
+        imagePreview.value = null;
     }
     showModal.value = true;
 };
@@ -51,11 +60,26 @@ const closeModal = () => {
     showModal.value = false;
     form.reset();
     form.clearErrors();
+    imagePreview.value = null;
+    if (fileInput.value) fileInput.value.value = '';
+};
+
+const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        form.photo = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            imagePreview.value = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 };
 
 const submit = () => {
+    // Selalu POST; _method meng-spoof PUT saat edit agar upload file berfungsi.
     if (editingId.value) {
-        form.put(route('admin.fasilitas.update', editingId.value), {
+        form.post(route('admin.fasilitas.update', editingId.value), {
             onSuccess: () => closeModal()
         });
     } else {
@@ -99,15 +123,26 @@ const deleteFacility = () => {
 
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <DataTable 
-                :items="facilities" 
+                :data="facilities" 
                 :columns="columns"
-                searchKey="title"
-                searchPlaceholder="Cari fasilitas..."
             >
+                <template #cell-photo="{ item }">
+                    <img
+                        v-if="item.photo"
+                        :src="`/storage/${item.photo}`"
+                        :alt="item.title"
+                        class="w-16 h-12 object-cover rounded-lg border border-slate-200"
+                    />
+                    <div v-else class="w-16 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-slate-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z" />
+                        </svg>
+                    </div>
+                </template>
                 <template #cell-description="{ item }">
                     <div class="max-w-md truncate">{{ item.description }}</div>
                 </template>
-                <template #cell-actions="{ item }">
+                <template #actions="{ item }">
                     <div class="flex items-center gap-2">
                         <button @click="openModal(item)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -137,6 +172,27 @@ const deleteFacility = () => {
                     </h3>
 
                     <form @submit.prevent="submit" class="space-y-5">
+                        <!-- Foto -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Foto Fasilitas</label>
+                            <div class="flex items-center gap-4">
+                                <div class="w-28 h-20 rounded-lg border border-slate-200 overflow-hidden shrink-0 bg-slate-50 flex items-center justify-center">
+                                    <img v-if="imagePreview" :src="imagePreview" class="w-full h-full object-cover" />
+                                    <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-slate-300">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <button type="button" @click="fileInput.click()" class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+                                        Pilih Foto
+                                    </button>
+                                    <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageChange">
+                                    <p class="text-xs text-slate-500 mt-1">JPG/PNG/WEBP, maks 2MB.</p>
+                                </div>
+                            </div>
+                            <div v-if="form.errors.photo" class="text-red-500 text-sm mt-1">{{ form.errors.photo }}</div>
+                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">Nama Fasilitas</label>
                             <TextInput

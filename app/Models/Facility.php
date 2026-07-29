@@ -10,6 +10,7 @@ class Facility extends Model
         'title',
         'description',
         'icon',
+        'photo',
         'order_index',
     ];
 }

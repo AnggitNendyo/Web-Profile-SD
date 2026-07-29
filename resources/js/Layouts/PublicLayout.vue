@@ -1,9 +1,20 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const isScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
+
+// Data sekolah dari shared props global (HandleInertiaRequests).
+const page = usePage();
+const settings = computed(() => page.props.schoolSettings || {});
+const schoolName = computed(() => settings.value.school_name || 'SD Negeri 1 Nusantara');
+// Inisial untuk kotak logo (mis. "SD Negeri 1 Nusantara" -> "SD").
+const initials = computed(() => {
+    const words = schoolName.value.trim().split(/\s+/).filter(Boolean);
+    return (words.slice(0, 2).map((w) => w[0]).join('') || 'SD').toUpperCase();
+});
+const currentYear = new Date().getFullYear();
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 20;

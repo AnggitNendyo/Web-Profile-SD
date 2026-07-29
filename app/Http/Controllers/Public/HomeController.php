@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Extracurricular;
+use App\Models\Facility;
 use App\Models\News;
+use App\Models\Page;
 use App\Models\PpdbSetting;
 use App\Models\SchoolSetting;
 use App\Models\Teacher;
@@ -23,6 +25,8 @@ class HomeController extends Controller
                 ->get(),
             'teachers'         => Teacher::orderBy('sort_order')->take(8)->get(),
             'extracurriculars' => Extracurricular::orderBy('sort_order')->take(6)->get(),
+            'facilities'       => Facility::orderBy('order_index')->take(6)->get(),
+            'visiMisi'         => Page::where('slug', 'visi-misi')->first(),
             'ppdbStatus'       => PpdbSetting::registrationStatus(),
             'stats'            => [
                 // Siswa & prestasi diisi manual lewat Pengaturan Sekolah; guru & ekskul dihitung otomatis.
