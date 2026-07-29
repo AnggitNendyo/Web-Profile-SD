@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Extracurricular;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\PpdbSetting;
@@ -25,10 +26,11 @@ class HomeController extends Controller
             'galleries' => Gallery::latest()->take(8)->get(),
             'ppdbSetting' => PpdbSetting::latest()->first(),
             'stats' => [
+                // Siswa & prestasi diisi manual lewat Pengaturan Sekolah; guru & ekskul dihitung otomatis.
+                'students' => (int) SchoolSetting::getValue('total_students', 0),
                 'teachers' => Teacher::count(),
-                'students' => 320, // placeholder, bisa diganti dari settings
-                'news' => News::published()->count(),
-                'galleries' => Gallery::count(),
+                'extracurriculars' => Extracurricular::count(),
+                'achievements' => (int) SchoolSetting::getValue('total_achievements', 0),
             ],
         ]);
     }

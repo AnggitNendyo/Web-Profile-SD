@@ -54,7 +54,8 @@ defineProps({
                         <Link href="/" :class="['nav-item', $page.component === 'Public/Home' ? 'is-active' : '']">Beranda</Link>
                         <Link href="/profil" :class="['nav-item', $page.component === 'Public/Profile' ? 'is-active' : '']">Profil</Link>
                         <Link href="/berita" :class="['nav-item', $page.component.startsWith('Public/News') ? 'is-active' : '']">Berita</Link>
-                        <Link href="/galeri" :class="['nav-item', $page.component === 'Public/Gallery' ? 'is-active' : '']">Galeri</Link>
+                        <!-- <Link href="/galeri" :class="['nav-item', $page.component === 'Public/Gallery' ? 'is-active' : '']">Galeri</Link> -->
+                        <Link href="/ekstrakurikuler" :class="['nav-item', $page.component === 'Public/Extracurriculars' ? 'is-active' : '']">Ekstrakurikuler</Link>
                         <Link href="/kalender" :class="['nav-item', $page.component === 'Public/Calendar' ? 'is-active' : '']">Kalender</Link>
                         <Link href="/ppdb" :class="['nav-item', $page.component === 'Public/Ppdb' ? 'is-active' : '']">PPDB</Link>
                     </div>
@@ -76,7 +77,8 @@ defineProps({
                 <Link href="/" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Beranda</Link>
                 <Link href="/profil" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Profil</Link>
                 <Link href="/berita" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Berita</Link>
-                <Link href="/galeri" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Galeri</Link>
+                <!-- <Link href="/galeri" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Galeri</Link> -->
+                <Link href="/ekstrakurikuler" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Ekstrakurikuler</Link>
                 <Link href="/kalender" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">Kalender</Link>
                 <Link href="/ppdb" class="font-medium text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-50">PPDB</Link>
             </div>
@@ -123,8 +125,9 @@ defineProps({
                         <ul class="flex flex-col gap-3">
                             <li><Link href="/profil" class="hover:text-indigo-400 transition-colors">Profil Sekolah</Link></li>
                             <li><Link href="/guru-staf" class="hover:text-indigo-400 transition-colors">Guru & Staf</Link></li>
+                            <li><Link href="/ekstrakurikuler" class="hover:text-indigo-400 transition-colors">Ekstrakurikuler</Link></li>
                             <li><Link href="/berita" class="hover:text-indigo-400 transition-colors">Berita & Pengumuman</Link></li>
-                            <li><Link href="/galeri" class="hover:text-indigo-400 transition-colors">Galeri Kegiatan</Link></li>
+                            <!-- <li><Link href="/galeri" class="hover:text-indigo-400 transition-colors">Galeri Kegiatan</Link></li> -->
                             <li><Link href="/kalender" class="hover:text-indigo-400 transition-colors">Kalender Akademik</Link></li>
                             <li><Link href="/ppdb" class="hover:text-indigo-400 transition-colors">Pendaftaran Siswa Baru</Link></li>
                         </ul>

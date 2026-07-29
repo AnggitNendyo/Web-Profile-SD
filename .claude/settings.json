@@ -12,7 +12,11 @@
       "Bash(php -l app/Http/Controllers/Admin/GalleryController.php)",
       "Bash(php -l app/Http/Controllers/Admin/NewsController.php)",
       "Bash(php -l app/Models/Gallery.php)",
-      "Bash(php -l app/Models/News.php)"
+      "Bash(php -l app/Models/News.php)",
+      "Bash(curl -s -H \"X-Inertia: true\" -H \"X-Inertia-Version: 1\" http://127.0.0.1:8000/)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('component:',d['component']\\); print\\('stats:',d['props'].get\\('stats'\\)\\)\")",
+      "Bash(curl -s -H \"X-Inertia: true\" http://127.0.0.1:8000/)",
+      "Bash(curl -s -H \"X-Inertia: true\" http://127.0.0.1:8000/ekstrakurikuler)"
     ]
   }
 }

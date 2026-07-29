@@ -14,14 +14,18 @@ const props = defineProps({
     latestNews: {
         type: Array,
         required: true,
+    },
+    stats: {
+        type: Object,
+        default: () => ({}),
     }
 });
 
 const statsData = computed(() => [
-    { label: 'Total Siswa', value: parseInt(props.settings.total_students) || 300, icon: 'users', suffix: '+' },
-    { label: 'Guru & Staf', value: 24, icon: 'academic-cap', suffix: '' },
-    { label: 'Ekstrakurikuler', value: 12, icon: 'star', suffix: '' },
-    { label: 'Prestasi', value: 50, icon: 'newspaper', suffix: '+' },
+    { label: 'Total Siswa', value: props.stats.students || 0, icon: 'users', suffix: '+' },
+    { label: 'Guru & Staf', value: props.stats.teachers || 0, icon: 'academic-cap', suffix: '' },
+    { label: 'Ekstrakurikuler', value: props.stats.extracurriculars || 0, icon: 'star', suffix: '' },
+    { label: 'Prestasi', value: props.stats.achievements || 0, icon: 'newspaper', suffix: '+' },
 ]);
 </script>
 

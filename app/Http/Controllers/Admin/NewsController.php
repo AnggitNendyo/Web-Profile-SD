@@ -66,10 +66,20 @@ class NewsController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        $validated['video_url'] = $this->resolveVideoId($validated['video_url'] ?? null);
+        // Hanya proses video_url jika field dikirim oleh form.
+        // Jika tidak ada perubahan, pertahankan nilai yang sudah tersimpan.
+        if ($request->has('video_url')) {
+            $validated['video_url'] = $this->resolveVideoId($validated['video_url'] ?? null);
+        } else {
+            unset($validated['video_url']);
+        }
 
+        // Hanya update thumbnail jika ada file baru yang diupload.
+        // Jika tidak ada file baru, hapus key dari validated agar nilai lama tidak tertimpa null.
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('news-thumbnails', 'public');
+        } else {
+            unset($validated['thumbnail']);
         }
 
         $beritum->update($validated);

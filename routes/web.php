@@ -6,6 +6,7 @@ use App\Http\Controllers\Public\ProfileController as PublicProfileController;
 use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Public\GalleryController;
 use App\Http\Controllers\Public\TeacherController;
+use App\Http\Controllers\Public\ExtracurricularController;
 use App\Http\Controllers\Public\PpdbController;
 use App\Http\Controllers\Public\DownloadController;
 use App\Http\Controllers\Public\ContactController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
+use App\Http\Controllers\Admin\ExtracurricularController as AdminExtracurricularController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PpdbRegistrationController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -30,9 +32,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/profil', [PublicProfileController::class, 'index'])->name('profile');
 Route::get('/guru-staf', [TeacherController::class, 'index'])->name('teachers');
+Route::get('/ekstrakurikuler', [ExtracurricularController::class, 'index'])->name('extracurriculars');
 Route::get('/berita', [NewsController::class, 'index'])->name('news.index');
 Route::get('/berita/{slug}', [NewsController::class, 'show'])->name('news.show');
-Route::get('/galeri', [GalleryController::class, 'index'])->name('gallery');
+// Route::get('/galeri', [GalleryController::class, 'index'])->name('gallery');
 Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb');
 Route::post('/ppdb', [PpdbController::class, 'store'])->name('ppdb.store');
 Route::get('/ppdb/cek-status', [PpdbController::class, 'showCheckStatus'])->name('ppdb.check');
@@ -64,8 +67,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Operator & Super Admin routes
     Route::middleware('role:super-admin,operator')->group(function () {
         Route::resource('berita', AdminNewsController::class);
-        Route::resource('galeri', AdminGalleryController::class)->only(['index', 'store', 'destroy']);
+        // Route::resource('galeri', AdminGalleryController::class)->only(['index', 'store', 'destroy']);
         Route::resource('guru', AdminTeacherController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::resource('ekstrakurikuler', AdminExtracurricularController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('unduhan', AdminDownloadController::class)->only(['index', 'store', 'destroy']);
         Route::resource('kalender', AcademicCalendarController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('ppdb/export', [PpdbRegistrationController::class, 'export'])->name('ppdb.export');

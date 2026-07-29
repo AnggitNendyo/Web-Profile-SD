@@ -20,7 +20,7 @@ const form = useForm({
     content: props.news?.content || '',
     published_at: props.news?.published_at ? props.news.published_at.substring(0, 16) : '',
     thumbnail: null,
-    video_url: props.news?.video_url || '',
+    video_url: props.news?.video_url ? `https://www.youtube.com/watch?v=${props.news.video_url}` : '',
     _method: isEditing.value ? 'PUT' : 'POST',
 });
 
@@ -176,7 +176,7 @@ const submit = () => {
                                     <input
                                         id="video_url"
                                         v-model="form.video_url"
-                                        type="url"
+                                        type="text"
                                         class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm"
                                         placeholder="https://www.youtube.com/watch?v=..."
                                     >

@@ -15,6 +15,10 @@ const form = useForm({
     npsn: props.settings.npsn || '',
     accreditation: props.settings.accreditation || '',
     established_year: props.settings.established_year || '',
+    total_students: props.settings.total_students || '',
+    total_achievements: props.settings.total_achievements || '',
+    motto: props.settings.motto || '',
+    principal_name: props.settings.principal_name || '',
     address: props.settings.address || '',
     phone: props.settings.phone || '',
     email: props.settings.email || '',
@@ -146,6 +150,41 @@ const submit = () => {
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">Tahun Berdiri</label>
                             <input v-model="form.established_year" type="text" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block: Statistik & Beranda -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h2 class="font-bold text-slate-800">Statistik & Beranda</h2>
+                    <p class="text-xs text-slate-500 mt-1">Angka yang tampil pada bagian statistik beranda. Jumlah Guru & Ekstrakurikuler dihitung otomatis dari data.</p>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Total Siswa</label>
+                            <input v-model="form.total_students" type="number" min="0" placeholder="Contoh: 320" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                            <p v-if="form.errors.total_students" class="mt-1 text-sm text-red-600">{{ form.errors.total_students }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Jumlah Prestasi</label>
+                            <input v-model="form.total_achievements" type="number" min="0" placeholder="Contoh: 50" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                            <p v-if="form.errors.total_achievements" class="mt-1 text-sm text-red-600">{{ form.errors.total_achievements }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Motto Sekolah</label>
+                            <input v-model="form.motto" type="text" placeholder="Contoh: Cerdas, Berkarakter, Berprestasi" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                            <p v-if="form.errors.motto" class="mt-1 text-sm text-red-600">{{ form.errors.motto }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Kepala Sekolah</label>
+                            <input v-model="form.principal_name" type="text" placeholder="Nama & gelar" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                            <p v-if="form.errors.principal_name" class="mt-1 text-sm text-red-600">{{ form.errors.principal_name }}</p>
                         </div>
                     </div>
                 </div>

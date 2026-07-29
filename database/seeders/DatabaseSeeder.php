@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             SchoolSettingSeeder::class,
             TeacherSeeder::class,
+            ExtracurricularSeeder::class,
             NewsSeeder::class,
             PageSeeder::class,
             AcademicCalendarSeeder::class,
