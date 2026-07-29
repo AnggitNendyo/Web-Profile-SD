@@ -20,7 +20,18 @@ const form = useForm({
     content: props.news?.content || '',
     published_at: props.news?.published_at ? props.news.published_at.substring(0, 16) : '',
     thumbnail: null,
+    video_url: props.news?.video_url || '',
     _method: isEditing.value ? 'PUT' : 'POST',
+});
+
+// Preview thumbnail YouTube langsung di form.
+const newsYoutubeId = computed(() => {
+    const match = form.video_url.match(
+        /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+    );
+    if (match) return match[1];
+    if (/^[A-Za-z0-9_-]{11}$/.test(form.video_url.trim())) return form.video_url.trim();
+    return null;
 });
 
 const fileInput = ref(null);
@@ -153,6 +164,36 @@ const submit = () => {
                                 
                                 <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageChange">
                                 <p v-if="form.errors.thumbnail" class="text-sm text-red-600">{{ form.errors.thumbnail }}</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-4 pb-2 border-b border-slate-200">Video YouTube</h3>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="video_url" class="block text-sm font-medium text-slate-700 mb-1">URL Video (Opsional)</label>
+                                    <input
+                                        id="video_url"
+                                        v-model="form.video_url"
+                                        type="url"
+                                        class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm"
+                                        placeholder="https://www.youtube.com/watch?v=..."
+                                    >
+                                    <p class="text-xs text-slate-500 mt-1">Video tampil di atas artikel. Disematkan dari YouTube, tidak menambah storage.</p>
+                                    <p v-if="form.errors.video_url" class="mt-1 text-sm text-red-600">{{ form.errors.video_url }}</p>
+                                </div>
+
+                                <div v-if="newsYoutubeId" class="rounded-lg overflow-hidden border border-slate-200 relative aspect-video bg-slate-900">
+                                    <img :src="`https://img.youtube.com/vi/${newsYoutubeId}/hqdefault.jpg`" class="w-full h-full object-cover" />
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 ml-0.5">
+                                                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\YouTube;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
@@ -13,9 +15,14 @@ class News extends Model
         'slug',
         'content',
         'thumbnail',
+        'video_url',
         'category',
         'published_at',
         'author_id',
+    ];
+
+    protected $appends = [
+        'youtube_embed_url',
     ];
 
     protected function casts(): array
@@ -23,6 +30,14 @@ class News extends Model
         return [
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * video_url menyimpan ID YouTube; URL embed dipakai iframe di halaman berita.
+     */
+    protected function youtubeEmbedUrl(): Attribute
+    {
+        return Attribute::get(fn () => YouTube::embedUrl($this->video_url));
     }
 
     protected static function booted(): void

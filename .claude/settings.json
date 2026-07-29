@@ -7,7 +7,12 @@
       "Bash(strip_tags)",
       "Bash(cd \"d:/Aplikasi/Web Profile SD\" && head -c 600 /tmp/loginresp.txt; echo; echo \"=== serve.log ===\"; tail -20 storage/logs/serve.log)",
       "Bash(pkill -f \"artisan serve\")",
-      "Bash(rm -f storage/logs/serve.log /tmp/lr.txt /tmp/resp.txt /tmp/login.html /tmp/loginresp.txt /tmp/tstore.txt)"
+      "Bash(rm -f storage/logs/serve.log /tmp/lr.txt /tmp/resp.txt /tmp/login.html /tmp/loginresp.txt /tmp/tstore.txt)",
+      "Bash(php -l app/Support/YouTube.php)",
+      "Bash(php -l app/Http/Controllers/Admin/GalleryController.php)",
+      "Bash(php -l app/Http/Controllers/Admin/NewsController.php)",
+      "Bash(php -l app/Models/Gallery.php)",
+      "Bash(php -l app/Models/News.php)"
     ]
   }
 }

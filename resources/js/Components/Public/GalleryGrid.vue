@@ -15,8 +15,10 @@ const currentTitle = ref('');
 const currentType = ref('foto');
 
 const openLightbox = (gallery) => {
-    // Foto & video sama-sama dibuka inline di Lightbox.
-    currentImage.value = `/storage/${gallery.file_path}`;
+    // Foto: URL storage. Video: URL embed YouTube untuk iframe.
+    currentImage.value = gallery.type === 'video'
+        ? gallery.youtube_embed_url
+        : `/storage/${gallery.file_path}`;
     currentTitle.value = gallery.title;
     currentType.value = gallery.type;
     activeLightbox.value = true;
@@ -26,8 +28,8 @@ const getThumbnail = (gallery) => {
     if (gallery.type === 'foto') {
         return `/storage/${gallery.file_path}`;
     }
-    // For video, we might not have a thumbnail in this schema, so return a placeholder
-    return 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2000&auto=format&fit=crop'; 
+    // Video: thumbnail otomatis dari YouTube.
+    return gallery.youtube_thumbnail_url;
 };
 </script>
 

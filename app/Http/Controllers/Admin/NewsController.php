@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Support\YouTube;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class NewsController extends Controller
@@ -29,9 +31,11 @@ class NewsController extends Controller
             'content' => 'required|string',
             'category' => 'nullable|string|max:100',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'video_url' => 'nullable|string|max:255',
             'published_at' => 'nullable|date',
         ]);
 
+        $validated['video_url'] = $this->resolveVideoId($validated['video_url'] ?? null);
         $validated['slug'] = Str::slug($validated['title']) . '-' . Str::random(5);
         $validated['author_id'] = $request->user()->id;
 
@@ -58,8 +62,11 @@ class NewsController extends Controller
             'content' => 'required|string',
             'category' => 'nullable|string|max:100',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'video_url' => 'nullable|string|max:255',
             'published_at' => 'nullable|date',
         ]);
+
+        $validated['video_url'] = $this->resolveVideoId($validated['video_url'] ?? null);
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('news-thumbnails', 'public');
@@ -68,6 +75,26 @@ class NewsController extends Controller
         $beritum->update($validated);
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui.');
+    }
+
+    /**
+     * Ubah URL YouTube menjadi ID; kosong dibiarkan null, format salah ditolak.
+     */
+    private function resolveVideoId(?string $input): ?string
+    {
+        if (blank($input)) {
+            return null;
+        }
+
+        $id = YouTube::extractId($input);
+
+        if (! $id) {
+            throw ValidationException::withMessages([
+                'video_url' => 'URL YouTube tidak valid. Contoh: https://www.youtube.com/watch?v=xxxxxxxxxxx',
+            ]);
+        }
+
+        return $id;
     }
 
     public function destroy(News $beritum)

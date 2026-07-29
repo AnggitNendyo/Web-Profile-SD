@@ -3,7 +3,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import DataTable from '@/Components/Admin/DataTable.vue';
 import ConfirmModal from '@/Components/Admin/ConfirmModal.vue';
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { format, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 
@@ -31,6 +31,17 @@ const form = useForm({
     type: 'foto',
     category: '',
     file: null,
+    video_url: '',
+});
+
+// Ekstrak ID YouTube untuk preview thumbnail langsung di form.
+const youtubeId = computed(() => {
+    const match = form.video_url.match(
+        /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+    );
+    if (match) return match[1];
+    if (/^[A-Za-z0-9_-]{11}$/.test(form.video_url.trim())) return form.video_url.trim();
+    return null;
 });
 
 const deleteForm = useForm({});
@@ -40,18 +51,13 @@ const filePreview = ref(null);
 
 const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
         form.file = file;
-        
-        if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                filePreview.value = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else if (file.type.startsWith('video/')) {
-            filePreview.value = 'video-placeholder'; // Simple placeholder
-        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            filePreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 };
 
@@ -112,11 +118,14 @@ const formatDate = (dateString) => {
             <template #cell-thumbnail="{ item }">
                 <div class="w-20 h-14 bg-slate-100 rounded overflow-hidden relative">
                     <img v-if="item.type === 'foto'" :src="`/storage/${item.file_path}`" class="w-full h-full object-cover" />
-                    <div v-else class="w-full h-full bg-slate-800 flex items-center justify-center text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                            <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
+                    <template v-else>
+                        <img :src="item.youtube_thumbnail_url" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 flex items-center justify-center bg-slate-900/30 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </template>
                 </div>
             </template>
 
@@ -142,7 +151,7 @@ const formatDate = (dateString) => {
 
             <!-- Actions -->
             <template #actions="{ item }">
-                <a :href="`/storage/${item.file_path}`" target="_blank" class="p-1.5 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 hover:bg-indigo-50 rounded" title="Lihat">
+                <a :href="item.type === 'video' ? `https://www.youtube.com/watch?v=${item.file_path}` : `/storage/${item.file_path}`" target="_blank" class="p-1.5 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 hover:bg-indigo-50 rounded" title="Lihat">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -194,11 +203,12 @@ const formatDate = (dateString) => {
                             </div>
                         </div>
 
-                        <div>
+                        <!-- FOTO: upload file -->
+                        <div v-if="form.type === 'foto'">
                             <label class="block text-sm font-semibold text-slate-700 mb-2">File Media <span class="text-red-500">*</span></label>
-                            
+
                             <!-- Custom File Upload Area -->
-                            <div 
+                            <div
                                 @click="$refs.fileInput.click()"
                                 class="border-2 border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors group relative overflow-hidden"
                             >
@@ -207,23 +217,42 @@ const formatDate = (dateString) => {
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                                     </svg>
                                     <p class="text-sm font-medium text-indigo-600">Pilih file untuk diupload</p>
-                                    <p class="text-xs text-slate-500 mt-1">Maks. 10MB (JPG, PNG, MP4)</p>
-                                </div>
-                                <div v-else-if="filePreview === 'video-placeholder'" class="text-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-indigo-500 mx-auto mb-2">
-                                        <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
-                                    </svg>
-                                    <p class="text-sm font-medium text-slate-800">{{ form.file.name }}</p>
+                                    <p class="text-xs text-slate-500 mt-1">Maks. 10MB (JPG, PNG, WebP)</p>
                                 </div>
                                 <img v-else :src="filePreview" class="absolute inset-0 w-full h-full object-cover" />
-                                
+
                                 <div v-if="filePreview" class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="px-3 py-1 bg-white text-slate-800 text-xs font-semibold rounded">Ganti File</span>
                                 </div>
                             </div>
-                            
-                            <input ref="fileInput" type="file" :accept="form.type === 'foto' ? 'image/*' : 'video/mp4,video/webm'" class="hidden" @change="handleFileChange">
+
+                            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileChange">
                             <p v-if="form.errors.file" class="mt-1 text-sm text-red-600">{{ form.errors.file }}</p>
+                        </div>
+
+                        <!-- VIDEO: URL YouTube (tanpa upload, hemat storage) -->
+                        <div v-else>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">URL Video YouTube <span class="text-red-500">*</span></label>
+                            <input
+                                v-model="form.video_url"
+                                type="url"
+                                class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                            >
+                            <p class="text-xs text-slate-500 mt-1">Tempel link YouTube. Video tidak diunggah ke server, hanya disematkan.</p>
+                            <p v-if="form.errors.video_url" class="mt-1 text-sm text-red-600">{{ form.errors.video_url }}</p>
+
+                            <!-- Preview thumbnail YouTube -->
+                            <div v-if="youtubeId" class="mt-3 rounded-xl overflow-hidden border border-slate-200 relative aspect-video bg-slate-900">
+                                <img :src="`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`" class="w-full h-full object-cover" />
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 ml-0.5">
+                                            <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">

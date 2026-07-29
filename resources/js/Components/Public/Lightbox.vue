@@ -23,8 +23,6 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const videoEl = ref(null);
-
 const close = () => {
     emit('close');
 };
@@ -41,16 +39,7 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
 watch(
     () => props.show,
     () => {
-        if (props.show) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = null;
-            // Hentikan video saat modal ditutup agar audio tidak terus berjalan.
-            if (videoEl.value) {
-                videoEl.value.pause();
-                videoEl.value.currentTime = 0;
-            }
-        }
+        document.body.style.overflow = props.show ? 'hidden' : null;
     }
 );
 </script>
@@ -87,19 +76,16 @@ watch(
                         leave-to-class="opacity-0 scale-95"
                     >
                         <div v-show="show" class="w-full flex flex-col items-center gap-4">
-                            <!-- Video: diputar inline dengan kontrol native -->
-                            <video
-                                v-if="type === 'video' && show"
-                                ref="videoEl"
-                                :src="image"
-                                controls
-                                autoplay
-                                playsinline
-                                preload="metadata"
-                                class="max-w-full max-h-[80vh] rounded-lg shadow-2xl bg-black"
-                            >
-                                Browser Anda tidak mendukung pemutaran video.
-                            </video>
+                            <!-- Video: disematkan via iframe YouTube -->
+                            <div v-if="type === 'video' && show" class="w-full max-w-4xl aspect-video">
+                                <iframe
+                                    :src="`${image}?autoplay=1&rel=0`"
+                                    class="w-full h-full rounded-lg shadow-2xl bg-black"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
                             <!-- Foto -->
                             <img v-else :src="image" :alt="title" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
 

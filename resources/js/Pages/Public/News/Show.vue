@@ -87,6 +87,17 @@ const thumbnailUrl = computed(() => {
             <div class="container mx-auto px-4 md:px-6">
                 <div class="max-w-3xl mx-auto -mt-24 relative z-20">
                     <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-slate-100">
+                        <!-- Featured video YouTube -->
+                        <div v-if="news.youtube_embed_url" class="mb-10 rounded-xl overflow-hidden shadow-md aspect-video bg-black">
+                            <iframe
+                                :src="`${news.youtube_embed_url}?rel=0`"
+                                class="w-full h-full"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+
                         <div class="prose prose-lg prose-indigo max-w-none prose-img:rounded-xl prose-img:shadow-md" v-html="news.content"></div>
                         
                         <!-- Share Options (Static visual only for now) -->
