@@ -1,12 +1,18 @@
 <script setup>
+import { Head } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import TeacherCard from '@/Components/Public/TeacherCard.vue';
-import { computed } from 'vue';
+import TeacherModal from '@/Components/Public/TeacherModal.vue';
 
 const props = defineProps({
     teachers: {
         type: Array,
         required: true,
+    },
+    settings: {
+        type: Object,
+        default: () => ({})
     }
 });
 
@@ -16,45 +22,62 @@ const principal = computed(() => {
 });
 
 const otherStaff = computed(() => {
-    if (!principal.value) return props.teachers;
-    return props.teachers.filter(t => t.id !== principal.value.id);
+    if (principal.value) {
+        return props.teachers.filter(t => t.id !== principal.value.id);
+    }
+    return props.teachers;
 });
+
+const showPrincipalModal = ref(false);
 </script>
 
 <template>
+    <Head title="Guru dan Staf" />
+
     <PublicLayout title="Guru & Staf - SD Negeri">
         <!-- Header -->
-        <section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
-            <div class="absolute inset-0 z-0">
-                <!-- Decorative background elements -->
-                <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"></div>
-                <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
-            </div>
+        <section class="bg-indigo-600 py-20 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('/img/pattern.svg')] opacity-10"></div>
+            <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl"></div>
+            <div class="absolute -top-24 -left-24 w-72 h-72 bg-indigo-400 opacity-20 rounded-full blur-2xl"></div>
+            
             <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
-                <span class="text-indigo-400 font-semibold tracking-wider uppercase text-sm mb-3 block">Tenaga Pendidik & Kependidikan</span>
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Guru & Staf</h1>
-                <p class="text-slate-300 text-lg max-w-2xl mx-auto">
-                    Mengenal para pendidik berdedikasi tinggi yang berkomitmen membimbing dan mencerdaskan generasi penerus bangsa.
+                <span class="text-indigo-200 font-semibold tracking-wider uppercase text-sm mb-2 block" data-aos="fade-down">SD Negeri XYZ</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6" data-aos="fade-up" data-aos-delay="100">Guru dan Staf</h1>
+                <p class="text-indigo-100 text-lg max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                    Mengenal lebih dekat para pendidik dan tenaga kependidikan yang berdedikasi membimbing generasi masa depan.
                 </p>
+            </div>
+            
+            <div class="absolute bottom-0 left-0 right-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-full h-auto text-slate-50 fill-current drop-shadow-sm">
+                    <path fill-opacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,213.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
             </div>
         </section>
 
         <section class="py-16 md:py-24 bg-slate-50 relative -mt-8">
             <div class="container mx-auto px-4 md:px-6">
                 <!-- Highlight Kepala Sekolah -->
-                <div v-if="principal" class="max-w-4xl mx-auto mb-20 bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100" data-aos="fade-up">
+                <div v-if="principal" class="max-w-4xl mx-auto mb-20 bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 hover:shadow-2xl transition-all duration-300 cursor-pointer group" data-aos="fade-up" @click="showPrincipalModal = true">
                     <div class="flex flex-col md:flex-row">
-                        <div class="w-full md:w-2/5 relative bg-indigo-50">
-                            <img :src="principal.photo ? `/storage/${principal.photo}` : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(principal.name) + '&background=random&size=512'" :alt="principal.name" class="w-full h-full object-cover aspect-square md:aspect-auto" />
-                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-6 text-white md:hidden">
+                        <div class="w-full md:w-2/5 relative bg-indigo-50 overflow-hidden">
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors z-10 pointer-events-none"></div>
+                            <img :src="principal.photo ? `/storage/${principal.photo}` : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(principal.name) + '&background=random&size=512'" :alt="principal.name" class="w-full h-full object-cover aspect-square md:aspect-auto group-hover:scale-105 transition-transform duration-500" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-6 text-white md:hidden z-20">
                                 <h3 class="text-2xl font-bold">{{ principal.name }}</h3>
                                 <p class="text-indigo-300">{{ principal.position }}</p>
                             </div>
                         </div>
-                        <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center">
+                        <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center relative">
+                            <div class="absolute top-4 right-4 bg-indigo-50 text-indigo-500 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                                </svg>
+                            </div>
                             <div class="hidden md:block mb-6">
                                 <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-semibold rounded-full mb-3">{{ principal.position }}</span>
-                                <h3 class="text-3xl font-bold text-slate-900">{{ principal.name }}</h3>
+                                <h3 class="text-3xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ principal.name }}</h3>
                             </div>
                             
                             <div class="space-y-4 mb-8">
@@ -89,10 +112,13 @@ const otherStaff = computed(() => {
                     />
                 </div>
                 
-                <div v-if="otherStaff.length === 0" class="text-center py-12 text-slate-500 bg-white rounded-xl shadow-sm">
+                <div v-if="otherStaff.length === 0 && !principal" class="text-center py-12 text-slate-500 bg-white rounded-xl shadow-sm">
                     Belum ada data guru.
                 </div>
             </div>
         </section>
+
+        <!-- Principal Modal -->
+        <TeacherModal v-if="principal" :show="showPrincipalModal" :teacher="principal" @close="showPrincipalModal = false" />
     </PublicLayout>
 </template>

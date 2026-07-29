@@ -10,8 +10,17 @@ class Teacher extends Model
         'name',
         'position',
         'subject',
+        'education',
+        'bio',
         'nip',
         'photo',
         'sort_order',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'education' => 'array',
+        ];
+    }
 }

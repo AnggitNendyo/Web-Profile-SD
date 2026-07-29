@@ -17,10 +17,20 @@ const form = useForm({
     nip: props.teacher?.nip || '',
     position: props.teacher?.position || '',
     subject: props.teacher?.subject || '',
+    education: props.teacher?.education || [],
+    bio: props.teacher?.bio || '',
     sort_order: props.teacher?.sort_order || 0,
     photo: null,
     _method: isEditing.value ? 'PUT' : 'POST',
 });
+
+const addEducation = () => {
+    form.education.push({ degree: '', program: '', university: '', year: '' });
+};
+
+const removeEducation = (index) => {
+    form.education.splice(index, 1);
+};
 
 const fileInput = ref(null);
 const imagePreview = ref(props.teacher?.photo ? `/storage/${props.teacher.photo}` : null);
@@ -134,6 +144,62 @@ const submit = () => {
                             placeholder="Contoh: Guru Kelas 1, Kepala Sekolah"
                         >
                         <p v-if="form.errors.position" class="mt-1 text-sm text-red-600">{{ form.errors.position }}</p>
+                    </div>
+                    
+
+
+                    <!-- Riwayat Pendidikan -->
+                    <div class="md:col-span-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-semibold text-slate-700">Riwayat Pendidikan</label>
+                            <button type="button" @click="addEducation" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                + Tambah Riwayat
+                            </button>
+                        </div>
+                        
+                        <div v-if="form.education.length === 0" class="text-sm text-slate-500 italic mb-2">
+                            Belum ada riwayat pendidikan yang ditambahkan.
+                        </div>
+
+                        <div v-for="(edu, index) in form.education" :key="index" class="p-4 bg-slate-50 rounded-lg border border-slate-200 mb-3 relative">
+                            <button type="button" @click="removeEducation(index)" class="absolute top-2 right-2 text-red-500 hover:text-red-700" title="Hapus">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Gelar</label>
+                                    <input v-model="edu.degree" type="text" placeholder="Contoh: S1" class="w-full text-sm rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Program Studi</label>
+                                    <input v-model="edu.program" type="text" placeholder="Contoh: Pendidikan Matematika" class="w-full text-sm rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Universitas/Instansi</label>
+                                    <input v-model="edu.university" type="text" placeholder="Contoh: Universitas Negeri Jakarta" class="w-full text-sm rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tahun Lulus</label>
+                                    <input v-model="edu.year" type="text" placeholder="Contoh: 2015" class="w-full text-sm rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Biografi / Deskripsi -->
+                    <div class="md:col-span-2">
+                        <label for="bio" class="block text-sm font-semibold text-slate-700 mb-1">Profil Singkat</label>
+                        <textarea 
+                            id="bio" 
+                            v-model="form.bio" 
+                            rows="4"
+                            class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors"
+                            placeholder="Tuliskan sedikit profil, pengalaman, atau motto guru..."
+                        ></textarea>
+                        <p v-if="form.errors.bio" class="mt-1 text-sm text-red-600">{{ form.errors.bio }}</p>
                     </div>
                     
                     <!-- Order -->
