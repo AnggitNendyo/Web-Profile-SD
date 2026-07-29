@@ -19,6 +19,8 @@ const form = useForm({
     total_achievements: props.settings.total_achievements || '',
     motto: props.settings.motto || '',
     principal_name: props.settings.principal_name || '',
+    principal_greeting: props.settings.principal_greeting || '',
+    principal_photo: null,
     address: props.settings.address || '',
     phone: props.settings.phone || '',
     email: props.settings.email || '',
@@ -37,6 +39,8 @@ const form = useForm({
 
 const logoInput = ref(null);
 const logoPreview = ref(props.settings.logo_path ? `/storage/${props.settings.logo_path}` : null);
+const principalPhotoInput = ref(null);
+const principalPhotoPreview = ref(props.settings.principal_photo ? `/storage/${props.settings.principal_photo}` : null);
 
 const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -74,6 +78,18 @@ const handleBackgroundChange = (key, e) => {
         const reader = new FileReader();
         reader.onload = (ev) => {
             bgPreviews[key] = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+const handlePrincipalPhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        form.principal_photo = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            principalPhotoPreview.value = ev.target.result;
         };
         reader.readAsDataURL(file);
     }
@@ -181,10 +197,36 @@ const submit = () => {
                             <p v-if="form.errors.motto" class="mt-1 text-sm text-red-600">{{ form.errors.motto }}</p>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Kepala Sekolah</label>
-                            <input v-model="form.principal_name" type="text" placeholder="Nama & gelar" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
-                            <p v-if="form.errors.principal_name" class="mt-1 text-sm text-red-600">{{ form.errors.principal_name }}</p>
+                        <div class="md:col-span-2 border-t border-slate-100 pt-6 mt-2">
+                            <h3 class="font-semibold text-slate-700 mb-4">Sambutan Kepala Sekolah</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="flex flex-col items-center gap-4">
+                                    <div class="w-32 h-40 rounded-xl border-2 border-dashed border-slate-300 overflow-hidden bg-slate-50 flex items-center justify-center">
+                                        <img v-if="principalPhotoPreview" :src="principalPhotoPreview" class="w-full h-full object-cover" />
+                                        <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-slate-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                        </svg>
+                                    </div>
+                                    <label class="inline-block px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
+                                        {{ principalPhotoPreview ? 'Ganti Foto' : 'Upload Foto' }}
+                                        <input ref="principalPhotoInput" type="file" accept="image/*" class="hidden" @change="handlePrincipalPhotoChange">
+                                    </label>
+                                    <p class="text-xs text-slate-500 text-center">Foto Kepala Sekolah. Rasio 3:4 disarankan.</p>
+                                    <p v-if="form.errors.principal_photo" class="text-sm text-red-600">{{ form.errors.principal_photo }}</p>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Kepala Sekolah</label>
+                                        <input v-model="form.principal_name" type="text" placeholder="Nama & gelar" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                                        <p v-if="form.errors.principal_name" class="mt-1 text-sm text-red-600">{{ form.errors.principal_name }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1">Teks Sambutan</label>
+                                        <textarea v-model="form.principal_greeting" rows="5" placeholder="Tulis kata sambutan dari kepala sekolah..." class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm"></textarea>
+                                        <p v-if="form.errors.principal_greeting" class="mt-1 text-sm text-red-600">{{ form.errors.principal_greeting }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

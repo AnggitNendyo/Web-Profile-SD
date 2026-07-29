@@ -27,6 +27,7 @@ class SettingController extends Controller
             'total_achievements' => 'nullable|integer|min:0',
             'motto' => 'nullable|string|max:255',
             'principal_name' => 'nullable|string|max:255',
+            'principal_greeting' => 'nullable|string|max:2000',
             'address' => 'nullable|string|max:500',
             'phone' => 'nullable|string|max:30',
             'email' => 'nullable|email|max:255',
@@ -35,6 +36,7 @@ class SettingController extends Controller
             'instagram_url' => 'nullable|string|max:255',
             'youtube_url' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'principal_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'hero_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'banner_profile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'banner_ppdb' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
@@ -47,6 +49,12 @@ class SettingController extends Controller
             $validated['logo_path'] = $request->file('logo')->store('settings', 'public');
         }
         unset($validated['logo']);
+
+        if ($request->hasFile('principal_photo')) {
+            $validated['principal_photo'] = $request->file('principal_photo')->store('settings', 'public');
+        } else {
+            unset($validated['principal_photo']);
+        }
 
         // Background images: store uploaded file and keep its path under the same key.
         $imageKeys = ['hero_image', 'banner_profile', 'banner_ppdb', 'banner_news', 'banner_downloads', 'banner_calendar'];

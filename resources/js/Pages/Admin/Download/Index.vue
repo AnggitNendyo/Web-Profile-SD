@@ -11,7 +11,11 @@ const props = defineProps({
     downloads: {
         type: Object,
         required: true,
-    }
+    },
+    categories: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const columns = [
@@ -155,13 +159,10 @@ const formatDate = (dateString) => {
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Kategori Dokumen <span class="text-red-500">*</span></label>
-                            <select v-model="form.category" required class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
-                                <option value="" disabled>Pilih Kategori...</option>
-                                <option value="Akademik">Akademik</option>
-                                <option value="Kesiswaan">Kesiswaan</option>
-                                <option value="BOS">BOS (Bantuan Operasional Sekolah)</option>
-                                <option value="Umum">Umum</option>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Kategori Dokumen</label>
+                            <select v-model="form.category" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm">
+                                <option value="">-- Pilih Kategori --</option>
+                                <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
                             </select>
                             <p v-if="form.errors.category" class="mt-1 text-sm text-red-600">{{ form.errors.category }}</p>
                         </div>

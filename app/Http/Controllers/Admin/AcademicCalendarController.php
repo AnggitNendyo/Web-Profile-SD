@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AcademicCalendar;
+use App\Models\MasterData;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,8 +13,8 @@ class AcademicCalendarController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Calendar/Index', [
-            'events' => AcademicCalendar::orderBy('start_date')->paginate(15),
-            'categories' => AcademicCalendar::CATEGORIES,
+            'events'     => AcademicCalendar::orderBy('start_date')->paginate(15),
+            'categories' => MasterData::getByType('calendar_category'),
         ]);
     }
 
@@ -45,7 +46,7 @@ class AcademicCalendarController extends Controller
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'category' => 'nullable|string|in:' . implode(',', AcademicCalendar::CATEGORIES),
+            'category' => 'nullable|string|max:100',
         ]);
     }
 }

@@ -9,7 +9,11 @@ const props = defineProps({
     news: {
         type: Object,
         default: null,
-    }
+    },
+    categories: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const isEditing = computed(() => !!props.news);
@@ -121,13 +125,14 @@ const submit = () => {
                             <div class="space-y-4">
                                 <div>
                                     <label for="category" class="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
-                                    <input 
-                                        id="category" 
-                                        v-model="form.category" 
-                                        type="text" 
+                                    <select
+                                        id="category"
+                                        v-model="form.category"
                                         class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-sm"
-                                        placeholder="Contoh: Pengumuman, Prestasi"
                                     >
+                                        <option value="">-- Pilih Kategori --</option>
+                                        <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+                                    </select>
                                     <p v-if="form.errors.category" class="mt-1 text-sm text-red-600">{{ form.errors.category }}</p>
                                 </div>
                                 

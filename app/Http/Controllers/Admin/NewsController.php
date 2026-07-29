@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MasterData;
 use App\Models\News;
 use App\Support\YouTube;
 use Illuminate\Http\Request;
@@ -21,7 +22,9 @@ class NewsController extends Controller
 
     public function create()
     {
-        return Inertia::render('Admin/News/Form');
+        return Inertia::render('Admin/News/Form', [
+            'categories' => MasterData::getByType('news_category'),
+        ]);
     }
 
     public function store(Request $request)
@@ -51,7 +54,8 @@ class NewsController extends Controller
     public function edit(News $beritum)
     {
         return Inertia::render('Admin/News/Form', [
-            'news' => $beritum,
+            'news'       => $beritum,
+            'categories' => MasterData::getByType('news_category'),
         ]);
     }
 

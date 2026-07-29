@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Extracurricular;
+use App\Models\MasterData;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,13 +19,16 @@ class ExtracurricularController extends Controller
 
     public function create()
     {
-        return Inertia::render('Admin/Extracurricular/Form');
+        return Inertia::render('Admin/Extracurricular/Form', [
+            'categories' => MasterData::getByType('extracurricular_category'),
+        ]);
     }
 
     public function edit(Extracurricular $ekstrakurikuler)
     {
         return Inertia::render('Admin/Extracurricular/Form', [
             'extracurricular' => $ekstrakurikuler,
+            'categories'      => MasterData::getByType('extracurricular_category'),
         ]);
     }
 
