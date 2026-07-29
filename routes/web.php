@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\AcademicCalendarController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\MasterDataController;
+use App\Http\Controllers\Admin\FacilityController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -79,6 +80,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('pesan', ContactMessageController::class)->only(['index', 'show', 'destroy']);
         Route::patch('pesan/{pesan}/read', [ContactMessageController::class, 'markAsRead'])->name('pesan.read');
         Route::resource('master-data', MasterDataController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('fasilitas', FacilityController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('halaman', [PageController::class, 'index'])->name('pages.index');
         Route::get('halaman/{slug}/edit', [PageController::class, 'edit'])->name('pages.edit');
         Route::put('halaman/{slug}', [PageController::class, 'update'])->name('pages.update');
