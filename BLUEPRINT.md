@@ -218,7 +218,7 @@ Role dikelola via tabel pivot `model_has_roles` (spatie/laravel-permission) — 
 | key | varchar unique |
 | value | text nullable |
 
-Contoh key: `school_name`, `address`, `phone`, `email`, `social_instagram`, `social_facebook`, `map_embed_url`.
+Contoh key: `school_name`, `address`, `phone`, `email`, `instagram_url`, `facebook_url`, `youtube_url`, `map_embed_url`.
 
 ### academic_calendar
 | Kolom | Tipe |

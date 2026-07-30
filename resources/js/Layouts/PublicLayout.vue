@@ -16,6 +16,11 @@ const initials = computed(() => {
 });
 const currentYear = new Date().getFullYear();
 
+// Link sosial media (key seragam dengan form admin).
+const instagramUrl = computed(() => settings.value.instagram_url || '');
+const facebookUrl = computed(() => settings.value.facebook_url || '');
+const youtubeUrl = computed(() => settings.value.youtube_url || '');
+
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 20;
 };
@@ -119,8 +124,8 @@ defineProps({
                         </p>
                         <div class="flex gap-4">
                             <a
-                                v-if="settings.social_instagram"
-                                :href="settings.social_instagram"
+                                v-if="instagramUrl"
+                                :href="instagramUrl"
                                 target="_blank"
                                 rel="noopener"
                                 class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors"
@@ -129,8 +134,8 @@ defineProps({
                                 IG
                             </a>
                             <a
-                                v-if="settings.social_facebook"
-                                :href="settings.social_facebook"
+                                v-if="facebookUrl"
+                                :href="facebookUrl"
                                 target="_blank"
                                 rel="noopener"
                                 class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors"
@@ -139,8 +144,8 @@ defineProps({
                                 FB
                             </a>
                             <a
-                                v-if="settings.social_youtube"
-                                :href="settings.social_youtube"
+                                v-if="youtubeUrl"
+                                :href="youtubeUrl"
                                 target="_blank"
                                 rel="noopener"
                                 class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors"

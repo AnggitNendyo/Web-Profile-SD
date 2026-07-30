@@ -69,6 +69,14 @@ const ppdbBannerIcon = computed(() => {
 
 const scheduleText = (item) => [item.schedule_day, item.schedule_time].filter(Boolean).join(' · ');
 
+// Gambar latar CTA PPDB: pakai banner PPDB / hero yang bisa diatur admin, fallback ke Unsplash.
+const ctaImage = computed(() => {
+    const bg = props.settings.banner_ppdb || props.settings.hero_image;
+    return bg
+        ? `/storage/${bg}`
+        : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2022&auto=format&fit=crop';
+});
+
 // Slider horizontal (dipakai Berita, Ekstrakurikuler, Fasilitas)
 const newsSlider = ref(null);
 const extraSlider = ref(null);
@@ -520,7 +528,7 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
         <!-- CTA PPDB -->
         <section class="py-20 relative overflow-hidden bg-indigo-900">
             <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2022&auto=format&fit=crop" class="w-full h-full object-cover opacity-20" alt="School Background" />
+                <img :src="ctaImage" class="w-full h-full object-cover opacity-20" alt="School Background" />
                 <div class="absolute inset-0 bg-indigo-900/80 mix-blend-multiply"></div>
             </div>
 
