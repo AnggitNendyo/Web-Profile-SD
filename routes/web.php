@@ -79,6 +79,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('ppdb-setting', PpdbSettingController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('pesan', ContactMessageController::class)->only(['index', 'show', 'destroy']);
         Route::patch('pesan/{pesan}/read', [ContactMessageController::class, 'markAsRead'])->name('pesan.read');
+        Route::resource('siswa', \App\Http\Controllers\Admin\StudentController::class)->parameters(['siswa' => 'student'])->except(['show']);
         Route::resource('master-data', MasterDataController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('fasilitas', FacilityController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('halaman', [PageController::class, 'index'])->name('pages.index');

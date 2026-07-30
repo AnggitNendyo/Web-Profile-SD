@@ -50,6 +50,29 @@ class PpdbRegistrationController extends Controller
 
         $ppdb->update($validated);
 
+        if ($validated['status'] === 'accepted' && $oldStatus !== 'accepted') {
+            $studentData = [
+                'name' => $ppdb->nama_siswa,
+                'gender' => $ppdb->jenis_kelamin ?? 'Laki-laki',
+                'place_of_birth' => $ppdb->tempat_lahir,
+                'date_of_birth' => $ppdb->tanggal_lahir,
+                'address' => $ppdb->alamat,
+                'parent_name' => $ppdb->nama_ortu,
+                'parent_phone' => $ppdb->no_hp,
+                'enrollment_year' => date('Y'),
+                'status' => 'Aktif',
+            ];
+            
+            if (!empty($ppdb->nisn)) {
+                \App\Models\Student::firstOrCreate(['nisn' => $ppdb->nisn], $studentData);
+            } else {
+                \App\Models\Student::firstOrCreate([
+                    'name' => $ppdb->nama_siswa, 
+                    'date_of_birth' => $ppdb->tanggal_lahir
+                ], $studentData);
+            }
+        }
+
         // Send email notification to parent if status changed and email is available
         if ($oldStatus !== $validated['status'] && $ppdb->email_ortu) {
             try {

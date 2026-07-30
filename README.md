@@ -2,43 +2,58 @@
 
 Website profil sekolah dasar berbasis **Laravel 12** + **Vue 3** + **Inertia.js** dengan panel admin untuk pengelolaan konten secara mandiri.
 
+## ✨ Pembaruan Terbaru
+- **Sistem Email PPDB**: Orang tua kini otomatis menerima email notifikasi (lengkap dengan Nomor Pendaftaran) saat berhasil submit formulir pendaftaran PPDB.
+- **Bug Fix**: Penyesuaian format template email menjadi Markdown (`<x-mail::message>`) pada seluruh notifikasi aplikasi.
+
 ## Fitur Utama
 
 ### 🌐 Halaman Publik
 | Modul | Deskripsi |
 |-------|-----------|
-| **Beranda** | Hero section, statistik sekolah, berita terbaru, galeri foto, link YouTube |
-| **Profil** | Visi, misi, sejarah, dan informasi sekolah |
-| **Guru & Staf** | Daftar guru dan tenaga pendidik dengan foto dan informasi |
-| **Berita** | List berita dengan kategori + halaman detail |
-| **Galeri** | Foto-foto kegiatan sekolah dengan filter kategori |
-| **PPDB** | Informasi dan formulir pendaftaran peserta didik baru online |
-| **Unduhan** | Daftar dokumen yang dapat diunduh oleh pengunjung |
-| **Kontak** | Formulir kontak + informasi lokasi sekolah |
+| **Beranda** | Hero section, sambutan, informasi ringkas sekolah, dan berita terbaru |
+| **Profil Sekolah** | Menampilkan halaman statis seperti Visi Misi, Sejarah, dsb |
+| **Guru & Staf** | Direktori tenaga pendidik dan kependidikan beserta posisinya |
+| **Ekstrakurikuler** | Daftar kegiatan ekstrakurikuler yang tersedia di sekolah |
+| **Berita / Artikel** | Daftar publikasi berita sekolah lengkap dengan halaman detail |
+| **Kalender Akademik**| Menampilkan jadwal kegiatan akademik sekolah |
+| **Fasilitas** | (Jika diaktifkan) Menampilkan daftar fasilitas pendukung sekolah |
+| **PPDB Online** | Formulir pendaftaran siswa baru, cek status pendaftaran, dan cetak bukti pendaftaran |
+| **Unduhan** | Repositori file/dokumen publik yang dapat diunduh (misal: brosur, tata tertib) |
+| **Kontak** | Formulir pengiriman pesan ke sekolah beserta detail alamat/kontak |
+
+*(Catatan: Modul Galeri saat ini dinonaktifkan secara default pada route)*
 
 ### 🔐 Autentikasi & Otorisasi
 - Login/Logout menggunakan **Laravel Breeze**
-- Role-based access control via **spatie/laravel-permission**
-- Role: `super-admin`, `admin`
+- Role-based access control (RBAC) via **spatie/laravel-permission**
+- Memiliki 2 tingkatan Role: `super-admin` dan `operator`
 
-### 📊 Admin Panel
-| Modul | Fitur |
-|-------|-------|
-| **Dashboard** | Statistik ringkasan (berita, guru, galeri, pendaftaran PPDB) |
-| **Berita** | CRUD berita dengan gambar dan kategori |
-| **Galeri** | CRUD foto galeri dengan kategori |
-| **Guru & Staf** | CRUD data guru dan tenaga pendidik |
-| **Halaman** | CRUD halaman statis (profil, dll) dengan rich text editor |
-| **PPDB** | Kelola data pendaftar, ubah status (pending/approved/rejected) |
-| **Unduhan** | CRUD file unduhan |
-| **Pengguna** | Kelola pengguna dan assign role |
-| **Pengaturan** | Konfigurasi data sekolah, kalender akademik, sosial media |
-| **Kalender Akademik** | CRUD jadwal dan kegiatan akademik |
+### 📊 Admin Panel (CMS)
+Berikut adalah fitur pengelolaan yang tersedia di dashboard admin:
+
+| Modul | Hak Akses | Deskripsi |
+|-------|-----------|-----------|
+| **Dashboard** | Semua | Statistik ringkasan data (jumlah siswa pendaftar, berita, dll) |
+| **Berita** | Semua | Kelola publikasi artikel/berita (CRUD) |
+| **Guru & Staf** | Semua | Kelola direktori tenaga pendidik (CRUD) |
+| **Ekstrakurikuler**| Semua | Kelola data ekstrakurikuler sekolah (CRUD) |
+| **Kalender** | Semua | Kelola jadwal akademik tahunan sekolah (CRUD) |
+| **Fasilitas** | Semua | Kelola data fasilitas fisik sekolah (CRUD) |
+| **Master Data** | Semua | Kelola data referensi/kategori pendukung aplikasi |
+| **Unduhan** | Semua | Unggah dan kelola file dokumen publik |
+| **Halaman** | Semua | Kelola teks/konten halaman statis (Profil, Visi Misi) menggunakan Rich Text Editor |
+| **Pesan Kontak** | Semua | Kotak masuk untuk membaca pesan dari pengunjung web |
+| **Data PPDB** | Semua | Kelola pendaftar PPDB, ubah status (pending/verified/accepted/rejected), cetak/eksport data |
+| **Setting PPDB** | Semua | Buka/tutup jalur pendaftaran, atur kuota, dan pengaturan PPDB lainnya |
+| **Pengaturan Web**| Semua | Konfigurasi identitas sekolah, logo, kontak, sosial media, dsb |
+| **Pengguna** | **Super Admin**| Tambah, edit, hapus akun admin/operator serta penugasan *role* |
 
 ### 📧 Email Notifikasi
-- **NewContactMessageMail** — Notifikasi ketika ada pengiriman formulir kontak
-- **NewPpdbRegistrationMail** — Notifikasi pendaftaran PPDB baru
-- **PpdbStatusChangedMail** — Notifikasi perubahan status PPDB ke pendaftar
+- **NewContactMessageMail** — Notifikasi ketika ada pengiriman formulir kontak (ke Admin)
+- **NewPpdbRegistrationMail** — Notifikasi pendaftaran PPDB baru (ke Admin)
+- **PpdbRegistrationSuccessMail** — Notifikasi pendaftaran berhasil dikirim (ke Orang Tua)
+- **PpdbStatusChangedMail** — Notifikasi perubahan status PPDB (ke Orang Tua)
 
 ### 🎨 Frontend
 - **Tailwind CSS** untuk styling
@@ -58,38 +73,102 @@ Website profil sekolah dasar berbasis **Laravel 12** + **Vue 3** + **Inertia.js*
 - **Build Tool:** Vite
 - **Editor:** @vueup/vue-quill
 
-## Instalasi
+## 🚀 Panduan Instalasi (Step-by-Step)
 
+Untuk menjalankan proyek ini di komputer lokal Anda, ikuti langkah-langkah di bawah ini:
+
+### Persyaratan Sistem (Prerequisites)
+Pastikan komputer Anda sudah terinstal:
+- **PHP** (minimal versi 8.3)
+- **Composer** (untuk dependensi PHP)
+- **Node.js & npm** (untuk dependensi frontend Vue/Tailwind)
+- **PostgreSQL** (sebagai database utama)
+- **Git** (opsional, untuk clone repository)
+
+### Langkah Instalasi
+
+**1. Clone atau Download Repository**
 ```bash
-# 1. Clone repository
 git clone <repository-url>
 cd web-profile-sd
+```
+*(Jika tidak menggunakan Git, Anda bisa mengunduh file ZIP dan mengekstraknya, lalu buka terminal/CMD di dalam folder tersebut).*
 
-# 2. Install dependencies
+**2. Install Dependensi (Backend & Frontend)**
+```bash
 composer install
 npm install
+```
 
-# 3. Setup environment
+**3. Konfigurasi Environment (.env)**
+Salin file konfigurasi bawaan dan hasilkan application key baru:
+```bash
 cp .env.example .env
 php artisan key:generate
+```
 
-# 4. Konfigurasi database di .env
-# DB_CONNECTION=pgsql
-# DB_HOST=127.0.0.1
-# DB_PORT=5432
-# DB_DATABASE=web_profile_sd
-# DB_USERNAME=your_username
-# DB_PASSWORD=your_password
+**4. Konfigurasi Database & Email**
+Buka file `.env` di text editor pilihan Anda (misal: VS Code), lalu sesuaikan pengaturan berikut:
 
-# 5. Migrasi dan seeder
+- **Database** (Sesuaikan dengan kredensial PostgreSQL lokal Anda):
+  ```env
+  DB_CONNECTION=pgsql
+  DB_HOST=127.0.0.1
+  DB_PORT=5432
+  DB_DATABASE=sd_profile
+  DB_USERNAME=postgres
+  DB_PASSWORD=password_anda
+  ```
+- **Email** (Penting jika Anda ingin menguji notifikasi PPDB & Kontak):
+  ```env
+  MAIL_MAILER=smtp
+  MAIL_HOST=smtp-relay.brevo.com
+  MAIL_PORT=587
+  MAIL_USERNAME=username_smtp_anda
+  MAIL_PASSWORD=password_smtp_anda
+  MAIL_FROM_ADDRESS="admin@domainsekolah.com"
+  ```
+*(Tips: Jika Anda hanya ingin menguji secara lokal tanpa mengirim email sungguhan, ubah `MAIL_MAILER=log`)*
+
+**5. Migrasi Database & Seeder**
+Buat struktur tabel di database Anda dan isi dengan data awal (termasuk akun login default):
+```bash
 php artisan migrate --seed
+```
 
-# 6. Build assets
+**6. Buat Symbolic Link Storage (Sangat Penting)**
+Agar file/foto yang Anda unggah dari panel admin (berita, galeri, dokumen PPDB) dapat dibaca oleh sistem:
+```bash
+php artisan storage:link
+```
+
+**7. Build Assets (Frontend)**
+Kompilasi file Vue.js dan Tailwind CSS:
+```bash
 npm run build
+```
 
-# 7. Jalankan aplikasi
+**8. Jalankan Aplikasi**
+Buka 2 jendela terminal, lalu jalankan perintah berikut di masing-masing terminal:
+
+Terminal 1 (Menjalankan server Laravel backend):
+```bash
 php artisan serve
 ```
+
+Terminal 2 (Menjalankan Vite server frontend untuk *live reload* selama development):
+```bash
+npm run dev
+```
+
+Aplikasi kini dapat diakses di browser pada alamat: **http://localhost:8000**
+
+---
+
+### 🔑 Akses Login Admin (Default)
+Setelah Anda menjalankan perintah `php artisan migrate --seed`, Anda dapat login ke halaman admin menggunakan akun bawaan:
+- **Email:** `admin@admin.com` *(Silakan sesuaikan jika Anda mengubahnya di DatabaseSeeder)*
+- **Password:** `password`
 
 ## Struktur Database
 
