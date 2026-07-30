@@ -2,37 +2,37 @@
 
 namespace App\Mail;
 
-use App\Models\ContactMessage;
+use App\Models\PpdbRegistration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
 
-class NewContactMessageMail extends Mailable implements ShouldQueue
+class PpdbRegistrationSuccessMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
+    public string $checkUrl;
+
     public function __construct(
-        public ContactMessage $contactMessage,
-    ) {}
+        public PpdbRegistration $registration,
+    ) {
+        $this->checkUrl = route('ppdb.check');
+    }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '[Kontak] Pesan Baru - ' . $this->contactMessage->subject,
-            replyTo: [
-                new Address($this->contactMessage->email, $this->contactMessage->name),
-            ],
+            subject: '[PPDB] Pendaftaran Berhasil - ' . $this->registration->nama_siswa,
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.contact-new-message',
+            markdown: 'emails.ppdb-registration-success',
         );
     }
 }

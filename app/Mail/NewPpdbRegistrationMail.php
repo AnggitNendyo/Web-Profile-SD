@@ -28,7 +28,7 @@ class NewPpdbRegistrationMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.ppdb-new-registration',
+            markdown: 'emails.ppdb-new-registration',
         );
     }
 }

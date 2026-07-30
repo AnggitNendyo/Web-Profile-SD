@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Mail\NewPpdbRegistrationMail;
+use App\Mail\PpdbRegistrationSuccessMail;
 use App\Models\PpdbRegistration;
 use App\Models\PpdbSetting;
 use App\Models\SchoolSetting;
@@ -63,6 +64,15 @@ class PpdbController extends Controller
             } catch (\Throwable $e) {
                 // Pendaftaran sudah tersimpan; kegagalan email tidak boleh menggagalkan proses.
                 Log::error('Gagal mengirim email notifikasi PPDB: ' . $e->getMessage());
+            }
+        }
+
+        // Notifikasi email ke orang tua (pendaftar)
+        if ($registration->email_ortu) {
+            try {
+                Mail::to($registration->email_ortu)->send(new PpdbRegistrationSuccessMail($registration));
+            } catch (\Throwable $e) {
+                Log::error('Gagal mengirim email sukses pendaftaran ke ortu: ' . $e->getMessage());
             }
         }
 

@@ -40,7 +40,7 @@ class PpdbStatusChangedMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.ppdb-status-changed',
+            markdown: 'emails.ppdb-status-changed',
         );
     }
 }
