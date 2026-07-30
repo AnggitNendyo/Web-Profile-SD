@@ -42,7 +42,7 @@ const showPrincipalModal = ref(false);
             <div class="absolute -top-24 -left-24 w-72 h-72 bg-indigo-400 opacity-20 rounded-full blur-2xl"></div>
             
             <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
-                <span class="text-indigo-200 font-semibold tracking-wider uppercase text-sm mb-2 block" data-aos="fade-down">SD Negeri XYZ</span>
+                <span class="text-indigo-200 font-semibold tracking-wider uppercase text-sm mb-2 block" data-aos="fade-down">{{ settings.school_name || 'SD Negeri' }}</span>
                 <h1 class="text-4xl md:text-5xl font-bold text-white mb-6" data-aos="fade-up" data-aos-delay="100">Guru dan Staf</h1>
                 <p class="text-indigo-100 text-lg max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
                     Mengenal lebih dekat para pendidik dan tenaga kependidikan yang berdedikasi membimbing generasi masa depan.

@@ -15,6 +15,9 @@ const form = useForm({
 
 const hasSearched = ref(!!props.searchQuery);
 
+// Tahun berjalan untuk contoh format nomor pendaftaran.
+const currentYear = new Date().getFullYear();
+
 const submitSearch = () => {
     hasSearched.value = true;
     form.post('/ppdb/cek-status', {
@@ -116,7 +119,7 @@ const formatDate = (dateString) => {
                             </svg>
                         </div>
                         <h2 class="text-2xl font-bold text-slate-900">Masukkan Nomor Pendaftaran</h2>
-                        <p class="text-slate-500 mt-2">Format: PPDB-2026-XXXX</p>
+                        <p class="text-slate-500 mt-2">Format: PPDB-{{ currentYear }}-XXXX</p>
                     </div>
 
                     <form @submit.prevent="submitSearch" class="flex flex-col sm:flex-row gap-4">
@@ -132,7 +135,7 @@ const formatDate = (dateString) => {
                                 type="text"
                                 required
                                 class="w-full pl-12 pr-4 py-4 rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-colors text-lg font-mono uppercase"
-                                placeholder="PPDB-2026-0001"
+                                :placeholder="`PPDB-${currentYear}-0001`"
                             >
                             <p v-if="form.errors.no_pendaftaran" class="mt-2 text-sm text-red-600">{{ form.errors.no_pendaftaran }}</p>
                         </div>

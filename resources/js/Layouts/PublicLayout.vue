@@ -51,11 +51,11 @@ defineProps({
                 <!-- Logo -->
                 <Link href="/" class="flex items-center gap-3 group">
                     <div class="w-10 h-10 bg-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-xl group-hover:bg-indigo-700 transition-colors">
-                        SD
+                        {{ initials }}
                     </div>
                     <div>
-                        <h1 :class="['font-bold leading-tight transition-colors', isScrolled ? 'text-slate-900' : 'text-slate-900 md:text-white']">SD Negeri 1</h1>
-                        <p :class="['text-xs font-medium transition-colors', isScrolled ? 'text-slate-500' : 'text-slate-500 md:text-slate-200']">Nusantara</p>
+                        <h1 :class="['font-bold leading-tight transition-colors', isScrolled ? 'text-slate-900' : 'text-slate-900 md:text-white']">{{ schoolName }}</h1>
+                        <p v-if="settings.motto" :class="['text-xs font-medium transition-colors', isScrolled ? 'text-slate-500' : 'text-slate-500 md:text-slate-200']">{{ settings.motto }}</p>
                     </div>
                 </Link>
 
@@ -107,25 +107,45 @@ defineProps({
                     <div class="md:col-span-2">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-10 h-10 bg-indigo-500 text-white rounded-lg flex items-center justify-center font-bold text-xl">
-                                SD
+                                {{ initials }}
                             </div>
                             <div>
-                                <h2 class="font-bold text-xl text-white">SD Negeri 1 Nusantara</h2>
-                                <p class="text-sm text-slate-400">Cerdas, Berkarakter, dan Berprestasi</p>
+                                <h2 class="font-bold text-xl text-white">{{ schoolName }}</h2>
+                                <p v-if="settings.motto" class="text-sm text-slate-400">{{ settings.motto }}</p>
                             </div>
                         </div>
                         <p class="text-slate-400 leading-relaxed max-w-md mb-6">
-                            Kami berkomitmen untuk memberikan pendidikan berkualitas yang tidak hanya fokus pada pencapaian akademik, tetapi juga pembentukan karakter siswa.
+                            {{ settings.footer_description || 'Kami berkomitmen memberikan pendidikan berkualitas yang tidak hanya fokus pada pencapaian akademik, tetapi juga pembentukan karakter siswa.' }}
                         </p>
                         <div class="flex gap-4">
-                            <!-- Social Icons Placeholders -->
-                            <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors">
+                            <a
+                                v-if="settings.social_instagram"
+                                :href="settings.social_instagram"
+                                target="_blank"
+                                rel="noopener"
+                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors"
+                                aria-label="Instagram"
+                            >
                                 IG
                             </a>
-                            <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors">
+                            <a
+                                v-if="settings.social_facebook"
+                                :href="settings.social_facebook"
+                                target="_blank"
+                                rel="noopener"
+                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors"
+                                aria-label="Facebook"
+                            >
                                 FB
                             </a>
-                            <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors">
+                            <a
+                                v-if="settings.social_youtube"
+                                :href="settings.social_youtube"
+                                target="_blank"
+                                rel="noopener"
+                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-colors"
+                                aria-label="YouTube"
+                            >
                                 YT
                             </a>
                         </div>
@@ -151,27 +171,27 @@ defineProps({
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-indigo-400 shrink-0">
                                     <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
                                 </svg>
-                                <span>Jl. Pendidikan No. 123, Kec. Maju, Kab. Sejahtera, 50123</span>
+                                <span>{{ settings.address || '-' }}</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-indigo-400 shrink-0">
                                     <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clip-rule="evenodd" />
                                 </svg>
-                                <span>(024) 1234567</span>
+                                <span>{{ settings.phone || '-' }}</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-indigo-400 shrink-0">
                                     <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
                                     <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
                                 </svg>
-                                <span>info@sdnegeri1nusantara.sch.id</span>
+                                <span>{{ settings.email || '-' }}</span>
                             </li>
                         </ul>
                     </div>
                 </div>
                 
                 <div class="pt-8 border-t border-slate-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p>&copy; {{ new Date().getFullYear() }} SD Negeri 1 Nusantara. Hak Cipta Dilindungi.</p>
+                    <p>&copy; {{ currentYear }} {{ schoolName }}. Hak Cipta Dilindungi.</p>
                     <div class="flex gap-4">
                         <Link href="/login" class="hover:text-white transition-colors">Admin Login</Link>
                     </div>
