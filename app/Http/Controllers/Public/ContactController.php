@@ -7,6 +7,7 @@ use App\Mail\NewContactMessageMail;
 use App\Models\ContactMessage;
 use App\Models\SchoolSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
@@ -33,7 +34,12 @@ class ContactController extends Controller
         // Send notification email to admin
         $adminEmail = SchoolSetting::where('key', 'email')->value('value');
         if ($adminEmail) {
-            Mail::to($adminEmail)->send(new NewContactMessageMail($contactMessage));
+            try {
+                Mail::to($adminEmail)->send(new NewContactMessageMail($contactMessage));
+            } catch (\Throwable $e) {
+                // Jangan gagalkan submit hanya karena email gagal terkirim; pesan sudah tersimpan.
+                Log::error('Gagal mengirim email notifikasi kontak: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('contact')->with('success', 'Pesan Anda berhasil dikirim! Kami akan segera merespons.');

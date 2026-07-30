@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\PpdbStatusChangedMail;
 use App\Models\PpdbRegistration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
@@ -51,7 +52,12 @@ class PpdbRegistrationController extends Controller
 
         // Send email notification to parent if status changed and email is available
         if ($oldStatus !== $validated['status'] && $ppdb->email_ortu) {
-            Mail::to($ppdb->email_ortu)->send(new PpdbStatusChangedMail($ppdb));
+            try {
+                Mail::to($ppdb->email_ortu)->send(new PpdbStatusChangedMail($ppdb));
+            } catch (\Throwable $e) {
+                // Status sudah diperbarui; kegagalan email tidak boleh menggagalkan aksi admin.
+                Log::error('Gagal mengirim email perubahan status PPDB: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('admin.ppdb.index')->with('success', 'Status pendaftaran berhasil diperbarui.');

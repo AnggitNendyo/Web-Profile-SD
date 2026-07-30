@@ -8,6 +8,7 @@ use App\Models\PpdbRegistration;
 use App\Models\PpdbSetting;
 use App\Models\SchoolSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
@@ -57,7 +58,12 @@ class PpdbController extends Controller
         // Notifikasi email ke admin
         $adminEmail = SchoolSetting::where('key', 'email')->value('value');
         if ($adminEmail) {
-            Mail::to($adminEmail)->send(new NewPpdbRegistrationMail($registration));
+            try {
+                Mail::to($adminEmail)->send(new NewPpdbRegistrationMail($registration));
+            } catch (\Throwable $e) {
+                // Pendaftaran sudah tersimpan; kegagalan email tidak boleh menggagalkan proses.
+                Log::error('Gagal mengirim email notifikasi PPDB: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('ppdb')->with([
