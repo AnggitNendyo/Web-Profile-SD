@@ -63,7 +63,8 @@ defineProps({
             <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
                 <!-- Logo -->
                 <Link href="/" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-xl group-hover:bg-indigo-700 transition-colors">
+                    <img v-if="settings.logo_path" :src="'/storage/' + settings.logo_path" alt="Logo" class="w-10 h-10 object-contain" />
+                    <div v-else class="w-10 h-10 bg-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-xl group-hover:bg-indigo-700 transition-colors">
                         {{ initials }}
                     </div>
                     <div>
@@ -119,7 +120,8 @@ defineProps({
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div class="md:col-span-2">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="w-10 h-10 bg-indigo-500 text-white rounded-lg flex items-center justify-center font-bold text-xl">
+                            <img v-if="settings.logo_path" :src="'/storage/' + settings.logo_path" alt="Logo" class="w-10 h-10 object-contain" />
+                            <div v-else class="w-10 h-10 bg-indigo-500 text-white rounded-lg flex items-center justify-center font-bold text-xl">
                                 {{ initials }}
                             </div>
                             <div>

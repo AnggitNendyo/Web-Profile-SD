@@ -5,6 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        
+        @php
+            $schoolLogo = \App\Models\SchoolSetting::getValue('logo_path');
+            $faviconUrl = $schoolLogo ? asset('storage/' . $schoolLogo) : asset('favicon.ico');
+        @endphp
+        <link rel="icon" href="{{ $faviconUrl }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
