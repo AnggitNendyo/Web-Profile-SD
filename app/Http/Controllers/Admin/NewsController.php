@@ -112,6 +112,16 @@ class NewsController extends Controller
         return $id;
     }
 
+    public function toggleStatus(News $beritum)
+    {
+        $isPublished = $beritum->published_at && $beritum->published_at <= now();
+        $beritum->update([
+            'published_at' => $isPublished ? null : now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Status publikasi berita berhasil diubah.');
+    }
+
     public function destroy(News $beritum)
     {
         $beritum->delete();

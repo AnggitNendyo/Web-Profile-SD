@@ -68,6 +68,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Operator & Super Admin routes
     Route::middleware('role:super-admin,operator')->group(function () {
+        Route::patch('berita/{berita}/toggle-status', [AdminNewsController::class, 'toggleStatus'])->name('berita.toggle-status');
         Route::resource('berita', AdminNewsController::class);
         // Route::resource('galeri', AdminGalleryController::class)->only(['index', 'store', 'destroy']);
         Route::resource('guru', AdminTeacherController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);

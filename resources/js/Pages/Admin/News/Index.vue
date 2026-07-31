@@ -41,6 +41,12 @@ const deleteItem = () => {
     });
 };
 
+const toggleStatus = (item) => {
+    form.patch(`/admin/berita/${item.id}/toggle-status`, {
+        preserveScroll: true,
+    });
+};
+
 const formatDate = (dateString) => {
     if (!dateString) return '-';
     return format(parseISO(dateString), 'dd MMM yyyy, HH:mm', { locale: id });
@@ -82,12 +88,27 @@ const formatDate = (dateString) => {
 
             <!-- Custom Cell: Status -->
             <template #cell-status="{ item }">
-                <span v-if="item.published_at && new Date(item.published_at) <= new Date()" class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                    Publikasi
-                </span>
-                <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
-                    Draft
-                </span>
+                <button 
+                    @click="toggleStatus(item)"
+                    :disabled="form.processing"
+                    :class="[
+                        'px-2.5 py-1 text-xs font-semibold rounded-full transition-colors flex items-center gap-1.5 border focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50',
+                        item.published_at && new Date(item.published_at) <= new Date() 
+                            ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 focus:ring-green-500' 
+                            : 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100 focus:ring-yellow-500'
+                    ]"
+                    :title="item.published_at && new Date(item.published_at) <= new Date() ? 'Ubah ke Draft' : 'Ubah ke Publikasi'"
+                >
+                    <div :class="[
+                        'w-2 h-2 rounded-full',
+                        item.published_at && new Date(item.published_at) <= new Date() ? 'bg-green-500' : 'bg-yellow-500'
+                    ]"></div>
+                    <span v-if="item.published_at && new Date(item.published_at) <= new Date()">Publikasi</span>
+                    <span v-else>Draft</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 opacity-60 ml-0.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
             </template>
 
             <!-- Custom Cell: Published At -->

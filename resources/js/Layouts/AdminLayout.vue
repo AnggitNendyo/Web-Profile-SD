@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 
 const page = usePage();
+const settings = computed(() => page.props.schoolSettings || {});
 const isSidebarOpen = ref(true);
 const isMobileSidebarOpen = ref(false);
 
@@ -69,7 +70,8 @@ defineProps({
             <!-- Sidebar Header -->
             <div class="h-16 flex items-center justify-between px-4 border-b border-slate-800">
                 <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold">
+                    <img v-if="settings.logo_path" :src="'/storage/' + settings.logo_path" alt="Logo" class="w-10 h-10 object-contain shrink-0" />
+                    <div v-else class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold">
                         SD
                     </div>
                     <span v-if="isSidebarOpen" class="font-bold whitespace-nowrap">Admin Panel</span>
