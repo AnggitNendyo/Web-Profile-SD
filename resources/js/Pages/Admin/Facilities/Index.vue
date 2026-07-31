@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
+import { checkFileSize, IMAGE_MAX_MB } from '@/lib/uploadLimits';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import DataTable from '@/Components/Admin/DataTable.vue';
 import ConfirmModal from '@/Components/Admin/ConfirmModal.vue';
@@ -67,6 +68,13 @@ const closeModal = () => {
 const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors.photo = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors.photo = null;
         form.photo = file;
         const reader = new FileReader();
         reader.onload = (ev) => {

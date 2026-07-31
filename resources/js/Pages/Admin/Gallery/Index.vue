@@ -4,6 +4,7 @@ import DataTable from '@/Components/Admin/DataTable.vue';
 import ConfirmModal from '@/Components/Admin/ConfirmModal.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import { checkFileSize, IMAGE_MAX_MB } from '@/lib/uploadLimits';
 import { format, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 
@@ -52,6 +53,13 @@ const filePreview = ref(null);
 const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors.file = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors.file = null;
         form.file = file;
         const reader = new FileReader();
         reader.onload = (e) => {

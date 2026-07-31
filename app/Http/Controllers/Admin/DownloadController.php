@@ -23,7 +23,7 @@ class DownloadController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'nullable|string|max:100',
-            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip|max:10240',
+            'file' => \App\Support\UploadRules::document(),
         ]);
 
         $validated['file_path'] = $request->file('file')->store('downloads', 'public');

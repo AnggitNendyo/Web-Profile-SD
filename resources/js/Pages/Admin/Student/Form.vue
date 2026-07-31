@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import { checkFileSize, IMAGE_MAX_MB } from '@/lib/uploadLimits';
 
 const props = defineProps({
     student: {
@@ -35,6 +36,13 @@ const imagePreview = ref(props.student?.photo ? `/storage/${props.student.photo}
 const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors.photo = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors.photo = null;
         form.photo = file;
         const reader = new FileReader();
         reader.onload = (e) => {

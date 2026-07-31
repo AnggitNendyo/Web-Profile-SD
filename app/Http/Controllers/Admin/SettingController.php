@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolSetting;
+use App\Support\ImageCompressor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -35,23 +36,23 @@ class SettingController extends Controller
             'facebook_url' => 'nullable|string|max:255',
             'instagram_url' => 'nullable|string|max:255',
             'youtube_url' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'principal_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'hero_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'banner_profile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'banner_ppdb' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'banner_news' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'banner_downloads' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'banner_calendar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'logo' => \App\Support\UploadRules::image(),
+            'principal_photo' => \App\Support\UploadRules::image(),
+            'hero_image' => \App\Support\UploadRules::image(),
+            'banner_profile' => \App\Support\UploadRules::image(),
+            'banner_ppdb' => \App\Support\UploadRules::image(),
+            'banner_news' => \App\Support\UploadRules::image(),
+            'banner_downloads' => \App\Support\UploadRules::image(),
+            'banner_calendar' => \App\Support\UploadRules::image(),
         ]);
 
         if ($request->hasFile('logo')) {
-            $validated['logo_path'] = $request->file('logo')->store('settings', 'public');
+            $validated['logo_path'] = ImageCompressor::store($request->file('logo'), 'settings');
         }
         unset($validated['logo']);
 
         if ($request->hasFile('principal_photo')) {
-            $validated['principal_photo'] = $request->file('principal_photo')->store('settings', 'public');
+            $validated['principal_photo'] = ImageCompressor::store($request->file('principal_photo'), 'settings');
         } else {
             unset($validated['principal_photo']);
         }
@@ -60,7 +61,7 @@ class SettingController extends Controller
         $imageKeys = ['hero_image', 'banner_profile', 'banner_ppdb', 'banner_news', 'banner_downloads', 'banner_calendar'];
         foreach ($imageKeys as $key) {
             if ($request->hasFile($key)) {
-                $validated[$key] = $request->file($key)->store('settings', 'public');
+                $validated[$key] = ImageCompressor::store($request->file($key), 'settings');
             } else {
                 unset($validated[$key]);
             }

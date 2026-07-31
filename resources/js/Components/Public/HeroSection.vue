@@ -63,8 +63,8 @@ defineProps({
             </div>
         </div>
 
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+        <!-- Scroll Indicator (di atas kartu statistik yang overlap ~64px, z-30 agar tidak tertutup) -->
+        <div class="absolute bottom-24 left-1/2 -translate-x-1/2 z-30 animate-bounce">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-8 h-8 opacity-70">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>

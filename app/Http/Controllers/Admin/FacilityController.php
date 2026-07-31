@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
+use App\Support\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -23,7 +24,7 @@ class FacilityController extends Controller
         $validated = $this->validateData($request);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('facilities', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'facilities');
         }
 
         Facility::create($validated);
@@ -38,7 +39,7 @@ class FacilityController extends Controller
             if ($facility->photo) {
                 Storage::disk('public')->delete($facility->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('facilities', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'facilities');
         } else {
             unset($validated['photo']);
         }
@@ -63,7 +64,7 @@ class FacilityController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'icon' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'photo' => \App\Support\UploadRules::image(),
             'order_index' => 'nullable|integer',
         ]);
     }

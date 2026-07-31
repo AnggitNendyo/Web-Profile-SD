@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MasterData;
 use App\Models\News;
+use App\Support\ImageCompressor;
 use App\Support\YouTube;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -33,7 +34,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'nullable|string|max:100',
-            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'thumbnail' => \App\Support\UploadRules::image(),
             'video_url' => 'nullable|string|max:255',
             'published_at' => 'nullable|date',
         ]);
@@ -43,7 +44,7 @@ class NewsController extends Controller
         $validated['author_id'] = $request->user()->id;
 
         if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] = $request->file('thumbnail')->store('news-thumbnails', 'public');
+            $validated['thumbnail'] = ImageCompressor::store($request->file('thumbnail'), 'news-thumbnails');
         }
 
         News::create($validated);
@@ -65,7 +66,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'nullable|string|max:100',
-            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'thumbnail' => \App\Support\UploadRules::image(),
             'video_url' => 'nullable|string|max:255',
             'published_at' => 'nullable|date',
         ]);
@@ -81,7 +82,7 @@ class NewsController extends Controller
         // Hanya update thumbnail jika ada file baru yang diupload.
         // Jika tidak ada file baru, hapus key dari validated agar nilai lama tidak tertimpa null.
         if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] = $request->file('thumbnail')->store('news-thumbnails', 'public');
+            $validated['thumbnail'] = ImageCompressor::store($request->file('thumbnail'), 'news-thumbnails');
         } else {
             unset($validated['thumbnail']);
         }

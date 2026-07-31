@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Extracurricular;
 use App\Models\MasterData;
+use App\Support\ImageCompressor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -37,7 +38,7 @@ class ExtracurricularController extends Controller
         $validated = $this->validateData($request);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('extracurriculars', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'extracurriculars');
         }
 
         Extracurricular::create($validated);
@@ -50,7 +51,7 @@ class ExtracurricularController extends Controller
         $validated = $this->validateData($request);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('extracurriculars', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'extracurriculars');
         } else {
             unset($validated['photo']);
         }
@@ -76,7 +77,7 @@ class ExtracurricularController extends Controller
             'schedule_day' => 'nullable|string|max:100',
             'schedule_time' => 'nullable|string|max:100',
             'category' => 'nullable|string|max:100',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'photo' => \App\Support\UploadRules::image(),
             'sort_order' => 'nullable|integer',
         ]);
     }

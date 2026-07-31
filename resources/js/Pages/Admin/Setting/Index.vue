@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, reactive } from 'vue';
+import { checkFileSize, IMAGE_MAX_MB } from '@/lib/uploadLimits';
 
 const props = defineProps({
     settings: {
@@ -45,6 +46,13 @@ const principalPhotoPreview = ref(props.settings.principal_photo ? `/storage/${p
 const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors.logo = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors.logo = null;
         form.logo = file;
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -74,6 +82,13 @@ const bgPreviews = reactive(
 const handleBackgroundChange = (key, e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors[key] = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors[key] = null;
         form[key] = file;
         const reader = new FileReader();
         reader.onload = (ev) => {
@@ -86,6 +101,13 @@ const handleBackgroundChange = (key, e) => {
 const handlePrincipalPhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors.principal_photo = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors.principal_photo = null;
         form.principal_photo = file;
         const reader = new FileReader();
         reader.onload = (ev) => {

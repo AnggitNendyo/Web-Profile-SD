@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
+use App\Support\ImageCompressor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -41,12 +42,12 @@ class TeacherController extends Controller
             'education.*.year' => 'nullable|string|max:50',
             'bio' => 'nullable|string',
             'nip' => 'nullable|string|max:50',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'photo' => \App\Support\UploadRules::image(),
             'sort_order' => 'nullable|integer',
         ]);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('teachers', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'teachers');
         }
 
         Teacher::create($validated);
@@ -67,12 +68,12 @@ class TeacherController extends Controller
             'education.*.year' => 'nullable|string|max:50',
             'bio' => 'nullable|string',
             'nip' => 'nullable|string|max:50',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'photo' => \App\Support\UploadRules::image(),
             'sort_order' => 'nullable|integer',
         ]);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('teachers', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'teachers');
         }
 
         $guru->update($validated);

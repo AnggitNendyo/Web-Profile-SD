@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import { checkFileSize, IMAGE_MAX_MB } from '@/lib/uploadLimits';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -44,6 +45,13 @@ const imagePreview = ref(props.news?.thumbnail ? `/storage/${props.news.thumbnai
 const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, IMAGE_MAX_MB);
+        if (error) {
+            form.errors.thumbnail = error;
+            e.target.value = '';
+            return;
+        }
+        form.errors.thumbnail = null;
         form.thumbnail = file;
         const reader = new FileReader();
         reader.onload = (e) => {

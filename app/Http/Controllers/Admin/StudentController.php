@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
+use App\Support\ImageCompressor;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -54,11 +55,11 @@ class StudentController extends Controller
             'parent_phone' => 'nullable|string|max:20',
             'enrollment_year' => 'required|integer',
             'status' => 'required|in:Aktif,Lulus,Pindah,Dikeluarkan',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'photo' => \App\Support\UploadRules::image(),
         ]);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('students', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'students');
         }
 
         Student::create($validated);
@@ -88,14 +89,14 @@ class StudentController extends Controller
             'parent_phone' => 'nullable|string|max:20',
             'enrollment_year' => 'required|integer',
             'status' => 'required|in:Aktif,Lulus,Pindah,Dikeluarkan',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'photo' => \App\Support\UploadRules::image(),
         ]);
 
         if ($request->hasFile('photo')) {
             if ($student->photo) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($student->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('students', 'public');
+            $validated['photo'] = ImageCompressor::store($request->file('photo'), 'students');
         }
 
         $student->update($validated);

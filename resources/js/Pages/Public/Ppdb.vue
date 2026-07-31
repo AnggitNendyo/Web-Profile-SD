@@ -2,6 +2,7 @@
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { checkFileSize, PPDB_DOC_MAX_MB } from '@/lib/uploadLimits';
 
 const props = defineProps({
     settings: {
@@ -42,6 +43,14 @@ const fileName = ref('');
 const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+        const error = checkFileSize(file, PPDB_DOC_MAX_MB);
+        if (error) {
+            form.errors.dokumen_upload = error;
+            e.target.value = '';
+            fileName.value = '';
+            return;
+        }
+        form.errors.dokumen_upload = null;
         form.dokumen_upload = file;
         fileName.value = file.name;
     }

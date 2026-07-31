@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
+use App\Support\ImageCompressor;
 use App\Support\YouTube;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -24,7 +25,7 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'type' => 'required|in:foto,video',
             'category' => 'nullable|string|max:100',
-            'file' => 'required_if:type,foto|nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
+            'file' => 'required_if:type,foto|nullable|image|mimes:' . \App\Support\UploadRules::IMAGE_MIMES . '|max:' . \App\Support\UploadRules::IMAGE_MAX_KB,
             'video_url' => 'required_if:type,video|nullable|string|max:255',
         ]);
 
@@ -40,7 +41,7 @@ class GalleryController extends Controller
             // Untuk video, file_path menyimpan ID YouTube (hemat storage — tanpa upload file).
             $validated['file_path'] = $youtubeId;
         } else {
-            $validated['file_path'] = $request->file('file')->store('galleries', 'public');
+            $validated['file_path'] = ImageCompressor::store($request->file('file'), 'galleries');
         }
 
         unset($validated['file'], $validated['video_url']);

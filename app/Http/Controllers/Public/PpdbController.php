@@ -8,6 +8,7 @@ use App\Mail\PpdbRegistrationSuccessMail;
 use App\Models\PpdbRegistration;
 use App\Models\PpdbSetting;
 use App\Models\SchoolSetting;
+use App\Support\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -47,11 +48,11 @@ class PpdbController extends Controller
             'alamat' => 'required|string',
             'no_hp' => 'required|string|max:20',
             'email_ortu' => 'nullable|email|max:255',
-            'dokumen_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'dokumen_upload' => \App\Support\UploadRules::ppdbDocument(),
         ]);
 
         if ($request->hasFile('dokumen_upload')) {
-            $validated['dokumen_upload'] = $request->file('dokumen_upload')->store('ppdb-documents', 'public');
+            $validated['dokumen_upload'] = ImageCompressor::store($request->file('dokumen_upload'), 'ppdb-documents');
         }
 
         $registration = PpdbRegistration::create($validated);
