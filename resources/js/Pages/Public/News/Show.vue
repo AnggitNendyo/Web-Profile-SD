@@ -91,7 +91,7 @@ const copyLink = async () => {
                         </span>
                     </div>
                     
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-8">
+                    <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-white leading-tight mb-8">
                         {{ news.title }}
                     </h1>
                     

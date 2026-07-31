@@ -57,7 +57,7 @@ const thumbnailUrl = computed(() => {
                 </div>
             </div>
             
-            <h3 class="text-xl font-bold text-slate-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+            <h3 class="font-display text-xl font-semibold text-slate-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors">
                 {{ news.title }}
             </h3>
             

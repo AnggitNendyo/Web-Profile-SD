@@ -50,7 +50,7 @@ const getFileIcon = (path) => {
                 <div class="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxjaXJjbGUgY3g9IjIiIGN5PSIyIiByPSIyIiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==')] opacity-10"></div>
             </div>
             <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Unduhan Dokumen</h1>
+                <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-6">Unduhan Dokumen</h1>
                 <p class="text-indigo-100 text-lg max-w-2xl mx-auto">
                     Pusat unduhan berbagai dokumen resmi, materi pembelajaran, dan informasi penting lainnya.
                 </p>

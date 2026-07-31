@@ -27,7 +27,7 @@ const scheduleText = (item) => [item.schedule_day, item.schedule_time].filter(Bo
             </div>
             <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
                 <span class="text-indigo-400 font-semibold tracking-wider uppercase text-sm mb-3 block">Pengembangan Minat & Bakat</span>
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Ekstrakurikuler</h1>
+                <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-6">Ekstrakurikuler</h1>
                 <p class="text-slate-300 text-lg max-w-2xl mx-auto">
                     Beragam kegiatan untuk mengasah bakat, membentuk karakter, dan menumbuhkan kreativitas peserta didik di luar jam pelajaran.
                 </p>

@@ -14,8 +14,8 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
-                display: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
-                body: ['Inter', ...defaultTheme.fontFamily.sans],
+                display: ['Fraunces', ...defaultTheme.fontFamily.serif],
+                body: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
             },
         },
     },

@@ -55,7 +55,7 @@ onMounted(() => {
 
 <template>
     <section ref="targetSection" class="py-16 bg-white relative -mt-16 z-20 mx-4 md:mx-auto max-w-6xl rounded-2xl shadow-xl border border-slate-100">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 px-6 md:px-12 divide-x divide-slate-100">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 px-6 md:px-12 md:divide-x md:divide-slate-100">
             <div v-for="(stat, index) in stats" :key="index" class="text-center px-4" data-aos="fade-up" :data-aos-delay="100 * index">
                 <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-50 text-indigo-600 mb-4 shadow-inner">
                     <svg v-if="stat.icon === 'users'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -72,12 +72,12 @@ onMounted(() => {
                     </svg>
                 </div>
                 
-                <div class="flex items-baseline justify-center gap-1 font-bold text-4xl text-slate-800 mb-2">
+                <div class="flex items-baseline justify-center gap-1 font-display font-semibold text-4xl md:text-5xl text-slate-800 mb-2">
                     <span :ref="el => counters[index] = el">0</span>
                     <span v-if="stat.suffix" class="text-indigo-600">{{ stat.suffix }}</span>
                 </div>
-                
-                <h3 class="text-slate-500 font-medium tracking-wide uppercase text-sm">{{ stat.label }}</h3>
+
+                <h3 class="text-slate-500 font-medium tracking-wide uppercase text-xs">{{ stat.label }}</h3>
             </div>
         </div>
     </section>

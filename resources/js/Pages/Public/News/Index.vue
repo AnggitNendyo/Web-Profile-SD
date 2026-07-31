@@ -48,7 +48,7 @@ watch(search, submitSearch);
                 <div class="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxjaXJjbGUgY3g9IjIiIGN5PSIyIiByPSIyIiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==')]"></div>
             </div>
             <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Berita & Pengumuman</h1>
+                <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-6">Berita & Pengumuman</h1>
                 <p class="text-indigo-100 text-lg max-w-2xl mx-auto">
                     Informasi terkini seputar kegiatan sekolah, prestasi siswa, dan pengumuman penting lainnya.
                 </p>

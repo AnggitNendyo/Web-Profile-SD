@@ -75,7 +75,7 @@ const stats = [
             </div>
             <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
                 <span class="text-indigo-300 font-semibold tracking-wider uppercase text-sm mb-2 block">Tentang Kami</span>
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Profil Sekolah</h1>
+                <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-6">Profil Sekolah</h1>
                 <p class="text-indigo-100 text-lg max-w-2xl mx-auto">
                     Mengenal lebih dekat sejarah, visi, misi, dan komitmen kami dalam dunia pendidikan.
                 </p>
@@ -139,7 +139,7 @@ const stats = [
                     <div class="lg:col-span-9 space-y-16">
                         <!-- Sejarah / Profil -->
                         <div id="profil" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10" data-aos="fade-up">
-                            <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-4">
+                            <h2 class="font-display text-3xl font-semibold text-slate-900 mb-6 flex items-center gap-4">
                                 <span class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.315 48.315 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
@@ -152,7 +152,7 @@ const stats = [
 
                         <!-- Visi Misi -->
                         <div id="visi-misi" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10" data-aos="fade-up">
-                            <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-4">
+                            <h2 class="font-display text-3xl font-semibold text-slate-900 mb-6 flex items-center gap-4">
                                 <span class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
@@ -174,7 +174,7 @@ const stats = [
                             </svg>
                             
                             <div class="relative z-10">
-                                <h2 class="text-3xl font-bold mb-8">Identitas Sekolah</h2>
+                                <h2 class="font-display text-3xl font-semibold mb-8">Identitas Sekolah</h2>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                                     <div class="border-b border-indigo-700/50 pb-4">
                                         <span class="block text-indigo-300 text-sm mb-1">Nama Sekolah</span>
@@ -205,7 +205,7 @@ const stats = [
 
                         <!-- Fasilitas Unggulan -->
                         <div id="fasilitas" class="pt-8" data-aos="fade-up">
-                            <h2 class="text-3xl font-bold text-slate-900 mb-8 flex items-center gap-4">
+                            <h2 class="font-display text-3xl font-semibold text-slate-900 mb-8 flex items-center gap-4">
                                 <span class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75" />

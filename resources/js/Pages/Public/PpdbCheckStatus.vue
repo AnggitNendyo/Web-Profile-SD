@@ -100,7 +100,7 @@ const formatDate = (dateString) => {
                     </svg>
                     Lacak Pendaftaran
                 </span>
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Cek Status Pendaftaran</h1>
+                <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-6">Cek Status Pendaftaran</h1>
                 <p class="text-indigo-100 text-lg max-w-2xl mx-auto">
                     Masukkan nomor pendaftaran Anda untuk mengetahui status terkini proses penerimaan peserta didik baru.
                 </p>

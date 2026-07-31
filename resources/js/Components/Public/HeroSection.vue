@@ -36,12 +36,23 @@ defineProps({
         <!-- Content -->
         <div class="container mx-auto px-4 md:px-6 relative z-10 text-white">
             <div class="max-w-3xl" data-aos="fade-up" data-aos-duration="1000">
-                <span class="inline-block py-1 px-3 rounded-full bg-indigo-500/30 border border-indigo-400/50 text-indigo-100 text-sm font-semibold mb-6 backdrop-blur-sm shadow-lg">
+                <span class="inline-flex items-center gap-2 py-1.5 pl-2.5 pr-4 rounded-full bg-white/10 border border-white/20 text-indigo-50 text-sm font-semibold mb-6 backdrop-blur-md shadow-lg">
+                    <span class="inline-block h-4 w-0.5 rounded-full bg-red-400" aria-hidden="true"></span>
                     Selamat Datang di
                 </span>
-                
-                <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-lg">
-                    {{ title }}
+
+                <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] mb-6 tracking-tight drop-shadow-lg">
+                    <span class="relative inline-block">
+                        {{ title }}
+                        <!-- Coretan kapur di bawah judul, tergambar sekali saat load -->
+                        <svg
+                            class="chalk-underline absolute -bottom-3 left-0 w-full h-4 text-indigo-300"
+                            viewBox="0 0 300 16" preserveAspectRatio="none" fill="none" aria-hidden="true"
+                        >
+                            <path d="M3 11 C 60 4, 120 4, 160 8 S 260 13, 297 6"
+                                stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                        </svg>
+                    </span>
                 </h1>
                 
                 <p class="text-xl md:text-2xl text-slate-200 mb-10 max-w-2xl font-light leading-relaxed drop-shadow-md">
@@ -57,7 +68,7 @@ defineProps({
                     </Link>
                     
                     <Link href="/profil" class="inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/30 font-semibold rounded-full backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
-                        Pelajari Lebih Lanjut
+                        Tentang Sekolah Kami
                     </Link>
                 </div>
             </div>
@@ -75,3 +86,25 @@ defineProps({
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl z-0"></div>
     </section>
 </template>
+
+<style scoped>
+/* Coretan kapur: garis "digambar" sekali saat load memakai stroke-dashoffset. */
+.chalk-underline path {
+    stroke-dasharray: 320;
+    stroke-dashoffset: 320;
+    animation: chalk-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.6s forwards;
+}
+
+@keyframes chalk-draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chalk-underline path {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+}
+</style>

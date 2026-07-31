@@ -4,8 +4,11 @@ import HeroSection from '@/Components/Public/HeroSection.vue';
 import StatCounter from '@/Components/Public/StatCounter.vue';
 import NewsCard from '@/Components/Public/NewsCard.vue';
 import TeacherCard from '@/Components/Public/TeacherCard.vue';
+import SectionHeading from '@/Components/Public/SectionHeading.vue';
 import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import { format, parseISO } from 'date-fns';
+import { id as idLocale } from 'date-fns/locale';
 
 const props = defineProps({
     settings: {
@@ -82,6 +85,17 @@ const newsSlider = ref(null);
 const extraSlider = ref(null);
 const facilitySlider = ref(null);
 
+const formatSchedule = (buka, tutup) => {
+    if (buka && tutup) {
+        return `${format(parseISO(buka), 'd MMM', { locale: idLocale })} - ${format(parseISO(tutup), 'd MMM yyyy', { locale: idLocale })}`;
+    } else if (buka) {
+        return `Mulai ${format(parseISO(buka), 'd MMMM yyyy', { locale: idLocale })}`;
+    } else if (tutup) {
+        return `Hingga ${format(parseISO(tutup), 'd MMMM yyyy', { locale: idLocale })}`;
+    }
+    return 'Belum ditentukan';
+};
+
 const slide = (el, direction) => {
     if (!el) return;
     // Geser sejauh satu kartu (± lebar kartu pertama + gap).
@@ -106,41 +120,63 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
             :bgImage="settings.hero_image ? `/storage/${settings.hero_image}` : 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop'"
         />
 
-        <!-- Stats Section -->
-        <StatCounter :stats="statsData" />
+        <!-- CTA PPDB -->
+        <section v-if="ppdbStatus.state !== 'closed'" :class="['py-20 relative overflow-hidden', ppdbBannerClass]">
+            <div class="absolute inset-0 z-0">
+                <img :src="ctaImage" class="w-full h-full object-cover opacity-20" alt="School Background" />
+                <div class="absolute inset-0 bg-indigo-900/80 mix-blend-multiply"></div>
+            </div>
 
-        <!-- PPDB Status Banner (dinamis) -->
-        <section v-if="ppdbStatus.state !== 'ended'" class="py-4">
-            <div class="container mx-auto px-4 md:px-6">
-                <div
-                    :class="[ppdbBannerClass, 'rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg']"
-                    data-aos="fade-up"
-                >
-                    <div class="flex items-center gap-3 text-white">
-                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" :d="ppdbBannerIcon" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm sm:text-base">
-                                <span v-if="ppdbStatus.state === 'open'">🎉 PPDB Sedang Dibuka!</span>
-                                <span v-else-if="ppdbStatus.state === 'not_started'">📅 PPDB Akan Segera Dibuka</span>
-                                <span v-else>ℹ️ Informasi PPDB</span>
-                            </p>
-                            <p class="text-sm text-white/80">{{ ppdbStatus.message }}</p>
+            <div class="container mx-auto px-4 md:px-6 relative z-10 text-center" data-aos="zoom-in">
+                <span :class="['inline-flex items-center gap-2 py-1.5 px-4 rounded-full border text-sm font-semibold mb-6', ppdbStatus.state === 'open' ? 'bg-emerald-500/20 border-emerald-400/40 text-emerald-100' : 'bg-white/20 border-white/40 text-white']">
+                    <span v-if="ppdbStatus.state === 'open'" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true"></span>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" :d="ppdbBannerIcon" />
+                    </svg>
+                    {{ ppdbStatus.state === 'open' ? 'Pendaftaran Dibuka' : (ppdbStatus.state === 'not_started' ? 'Segera Dibuka' : 'Pendaftaran Ditutup') }}
+                </span>
+                <h2 class="font-display text-3xl md:text-5xl font-semibold text-white mb-6">Penerimaan Peserta Didik Baru (PPDB)</h2>
+                <p class="text-indigo-100 text-lg md:text-xl max-w-3xl mx-auto mb-8 leading-relaxed">
+                    {{ ppdbStatus.state === 'open' ? 'Mari bergabung bersama kami. Dapatkan pendidikan terbaik untuk masa depan gemilang putra-putri Anda.' : ppdbStatus.message }}
+                </p>
+
+                <!-- Info jadwal & kuota PPDB per jalur -->
+                <div class="flex flex-col gap-4 mb-10 max-w-4xl mx-auto">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-center">
+                        <div v-for="track in ppdbStatus.tracks" :key="track.id" class="flex flex-col p-5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm text-white text-left">
+                            <h3 class="font-bold text-lg text-emerald-300 mb-3">{{ track.jalur }}</h3>
+                            <div class="flex flex-col gap-3">
+                                <div class="flex items-start gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-indigo-200 shrink-0 mt-0.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                                    </svg>
+                                    <span class="font-medium text-sm leading-snug">{{ formatSchedule(track.jadwal_buka, track.jadwal_tutup) }}</span>
+                                </div>
+                                <div v-if="track.kuota" class="flex items-start gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-indigo-200 shrink-0 mt-0.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                                    </svg>
+                                    <span class="font-medium text-sm leading-snug">Kuota: {{ track.kuota }} kursi</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <Link
-                        href="/ppdb"
-                        class="shrink-0 px-5 py-2 bg-white rounded-full text-sm font-bold transition-all hover:scale-105 shadow"
-                        :class="ppdbStatus.state === 'open' ? 'text-emerald-700' : ppdbStatus.state === 'not_started' ? 'text-blue-700' : 'text-slate-700'"
-                    >
-                        {{ ppdbStatus.state === 'open' ? 'Daftar Sekarang' : 'Lihat Info' }}
-                    </Link>
+                    <div v-if="ppdbStatus.sisa !== null && ppdbStatus.sisa !== undefined" class="inline-flex mx-auto items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 text-white mt-4">
+                        <span class="text-sm text-indigo-100">Total Sisa Kuota Keseluruhan: <strong class="text-white ml-1">{{ ppdbStatus.sisa }} kursi</strong></span>
+                    </div>
                 </div>
+
+                <Link v-if="ppdbStatus.state === 'open'" href="/ppdb" class="inline-block px-10 py-4 bg-white text-indigo-700 font-bold text-lg rounded-full hover:bg-indigo-50 hover:scale-105 transition-all duration-300 shadow-xl shadow-indigo-900/50">
+                    Daftar Sekarang
+                </Link>
+                <Link v-else href="/ppdb" class="inline-block px-10 py-4 bg-white/20 backdrop-blur text-white font-bold text-lg rounded-full hover:bg-white/30 transition-all duration-300 border border-white/30">
+                    Lihat Detail PPDB
+                </Link>
             </div>
         </section>
+
+        <!-- Stats Section -->
+        <StatCounter :stats="statsData" />
 
         <!-- Sambutan Kepala Sekolah (Dinamis) -->
         <section class="py-20 bg-white">
@@ -155,11 +191,9 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
                     </div>
 
                     <div class="w-full md:w-2/3" data-aos="fade-left">
-                        <span class="text-indigo-600 font-semibold tracking-wider uppercase text-sm mb-2 block">Dari Pimpinan</span>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-2">Sambutan Kepala Sekolah</h2>
-                        <div class="w-16 h-1.5 bg-indigo-600 rounded-full mb-6"></div>
+                        <SectionHeading eyebrow="Dari Pimpinan" title="Sambutan Kepala Sekolah" class="mb-6" />
 
-                        <blockquote class="text-lg text-slate-600 italic leading-relaxed mb-6 border-l-4 border-indigo-200 pl-5">
+                        <blockquote class="text-lg text-slate-600 italic leading-relaxed mb-6 mt-6 border-l-4 border-indigo-200 pl-5">
                             "{{ settings.principal_greeting || 'Selamat datang di website resmi ' + (settings.school_name || 'sekolah kami') + '. Kami berkomitmen untuk menyelenggarakan pendidikan dasar yang berkualitas, berlandaskan iman dan taqwa, serta mengedepankan pembentukan karakter peserta didik.' }}"
                         </blockquote>
 
@@ -195,9 +229,8 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
                             <rect x="0" y="0" width="100%" height="100%" fill="url(#home-boxes)"></rect>
                         </svg>
                         <div class="relative z-10">
-                            <span class="text-indigo-300 font-semibold tracking-wider uppercase text-sm mb-2 block">Tentang Kami</span>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-8">Identitas Sekolah</h2>
-                            <div class="space-y-5">
+                            <SectionHeading eyebrow="Tentang Kami" title="Identitas Sekolah" light class="mb-8" />
+                            <div class="space-y-5 mt-8">
                                 <div class="border-b border-indigo-700/50 pb-4">
                                     <span class="block text-indigo-300 text-sm mb-1">Nama Sekolah</span>
                                     <span class="font-semibold text-lg">{{ settings.school_name || '-' }}</span>
@@ -235,13 +268,11 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
 
                     <!-- Visi & Misi -->
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 flex flex-col" data-aos="fade-left">
-                        <span class="text-indigo-600 font-semibold tracking-wider uppercase text-sm mb-2 block">Arah & Tujuan</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-2">{{ visiMisi?.title || 'Visi & Misi' }}</h2>
-                        <div class="w-16 h-1.5 bg-indigo-600 rounded-full mb-6"></div>
+                        <SectionHeading eyebrow="Arah &amp; Tujuan" :title="visiMisi?.title || 'Visi & Misi'" class="mb-6" />
 
                         <div
                             v-if="visiMisi?.content"
-                            class="prose prose-indigo max-w-none text-slate-600 line-clamp-[12] overflow-hidden flex-grow"
+                            class="prose prose-indigo max-w-none text-slate-600 line-clamp-[12] overflow-hidden flex-grow mt-6"
                             v-html="visiMisi.content"
                         ></div>
                         <p v-else class="text-slate-500 flex-grow">
@@ -266,11 +297,9 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
 
             <div class="container mx-auto px-4 md:px-6 relative z-10">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-12" data-aos="fade-up">
-                    <div class="max-w-2xl">
-                        <span class="text-indigo-600 font-semibold tracking-wider uppercase text-sm mb-2 block">Informasi Terkini</span>
-                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Berita & Pengumuman</h2>
-                        <p class="text-slate-600 text-lg">Ikuti perkembangan terbaru, kegiatan, dan prestasi dari {{ settings.school_name }}.</p>
-                    </div>
+                    <SectionHeading eyebrow="Informasi Terkini" title="Berita & Pengumuman" class="max-w-2xl">
+                        Ikuti perkembangan terbaru, kegiatan, dan prestasi dari {{ settings.school_name }}.
+                    </SectionHeading>
 
                     <div class="hidden md:flex items-center gap-3">
                         <Link href="/berita" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
@@ -328,11 +357,9 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
         <section v-if="facilities.length > 0" class="py-20 bg-slate-50">
             <div class="container mx-auto px-4 md:px-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-12" data-aos="fade-up">
-                    <div class="max-w-2xl">
-                        <span class="text-indigo-600 font-semibold tracking-wider uppercase text-sm mb-2 block">Sarana & Prasarana</span>
-                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Fasilitas Sekolah</h2>
-                        <p class="text-slate-600 text-lg">Sarana penunjang yang lengkap untuk mendukung proses belajar mengajar yang nyaman dan berkualitas.</p>
-                    </div>
+                    <SectionHeading eyebrow="Sarana & Prasarana" title="Fasilitas Sekolah" class="max-w-2xl">
+                        Sarana penunjang yang lengkap untuk mendukung proses belajar mengajar yang nyaman dan berkualitas.
+                    </SectionHeading>
                     <!-- Kontrol Slider (desktop) -->
                     <div class="hidden md:flex items-center gap-3 mt-4 md:mt-0">
                         <button
@@ -405,11 +432,9 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
 
             <div class="container mx-auto px-4 md:px-6 relative z-10">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-12" data-aos="fade-up">
-                    <div class="max-w-2xl">
-                        <span class="text-indigo-600 font-semibold tracking-wider uppercase text-sm mb-2 block">Pengembangan Bakat</span>
-                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Kegiatan Ekstrakurikuler</h2>
-                        <p class="text-slate-600 text-lg">Beragam kegiatan untuk mengasah bakat dan membentuk karakter peserta didik.</p>
-                    </div>
+                    <SectionHeading eyebrow="Pengembangan Bakat" title="Kegiatan Ekstrakurikuler" class="max-w-2xl">
+                        Beragam kegiatan untuk mengasah bakat dan membentuk karakter peserta didik.
+                    </SectionHeading>
                     <div class="hidden md:flex items-center gap-3 mt-4 md:mt-0">
                         <Link href="/ekstrakurikuler" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
                             Lihat Semua
@@ -494,11 +519,9 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
         <section v-if="teachers.length > 0" class="py-20 bg-white">
             <div class="container mx-auto px-4 md:px-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-12" data-aos="fade-up">
-                    <div class="max-w-2xl">
-                        <span class="text-indigo-600 font-semibold tracking-wider uppercase text-sm mb-2 block">Tim Pendidik</span>
-                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Guru & Staf Kami</h2>
-                        <p class="text-slate-600 text-lg">Tenaga pendidik profesional dan berdedikasi untuk masa depan peserta didik.</p>
-                    </div>
+                    <SectionHeading eyebrow="Tim Pendidik" title="Guru &amp; Staf Kami" class="max-w-2xl">
+                        Tenaga pendidik profesional dan berdedikasi untuk masa depan peserta didik.
+                    </SectionHeading>
                     <Link href="/guru-staf" class="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm mt-4 md:mt-0">
                         Lihat Semua
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
@@ -525,23 +548,6 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
             </div>
         </section>
 
-        <!-- CTA PPDB -->
-        <section class="py-20 relative overflow-hidden bg-indigo-900">
-            <div class="absolute inset-0 z-0">
-                <img :src="ctaImage" class="w-full h-full object-cover opacity-20" alt="School Background" />
-                <div class="absolute inset-0 bg-indigo-900/80 mix-blend-multiply"></div>
-            </div>
-
-            <div class="container mx-auto px-4 md:px-6 relative z-10 text-center" data-aos="zoom-in">
-                <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Penerimaan Peserta Didik Baru (PPDB)</h2>
-                <p class="text-indigo-100 text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed">
-                    Mari bergabung bersama kami. Dapatkan pendidikan terbaik untuk masa depan gemilang putra-putri Anda.
-                </p>
-                <Link href="/ppdb" class="inline-block px-10 py-5 bg-white text-indigo-700 font-bold text-lg rounded-full hover:bg-indigo-50 hover:scale-105 transition-all duration-300 shadow-xl shadow-indigo-900/50">
-                    Daftar Sekarang
-                </Link>
-            </div>
-        </section>
     </PublicLayout>
 </template>
 

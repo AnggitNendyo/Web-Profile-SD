@@ -48,10 +48,21 @@ class PpdbSetting extends Model
                 'open' => false,
                 'state' => 'closed',
                 'message' => 'Pendaftaran belum dibuka saat ini. Silakan pantau pengumuman resmi sekolah.',
+                'tracks' => [],
             ];
         }
 
         $today = now()->startOfDay();
+        
+        $tracksData = $active->map(function ($track) {
+            return [
+                'id' => $track->id,
+                'jalur' => $track->jalur,
+                'kuota' => $track->kuota,
+                'jadwal_buka' => $track->jadwal_buka?->toDateString(),
+                'jadwal_tutup' => $track->jadwal_tutup?->toDateString(),
+            ];
+        })->values()->toArray();
 
         // Jalur dengan jadwal paling awal buka menentukan tanggal mulai.
         $earliestOpen = $active->filter(fn ($s) => $s->jadwal_buka)->min('jadwal_buka');
@@ -61,6 +72,7 @@ class PpdbSetting extends Model
                 'state' => 'not_started',
                 'message' => 'Pendaftaran akan dibuka pada ' . $earliestOpen->translatedFormat('d F Y') . '.',
                 'jadwal_buka' => $earliestOpen->toDateString(),
+                'tracks' => $tracksData,
             ];
         }
 
@@ -72,6 +84,7 @@ class PpdbSetting extends Model
                 'state' => 'ended',
                 'message' => 'Masa pendaftaran telah berakhir pada ' . $latestClose->translatedFormat('d F Y') . '.',
                 'jadwal_tutup' => $latestClose->toDateString(),
+                'tracks' => $tracksData,
             ];
         }
 
@@ -86,6 +99,7 @@ class PpdbSetting extends Model
                 'message' => 'Kuota pendaftaran telah terpenuhi. Terima kasih atas antusiasme Anda.',
                 'kuota' => $totalKuota,
                 'terpakai' => $terpakai,
+                'tracks' => $tracksData,
             ];
         }
 
@@ -96,6 +110,9 @@ class PpdbSetting extends Model
             'kuota' => $totalKuota,
             'terpakai' => $terpakai,
             'sisa' => $totalKuota > 0 ? max(0, $totalKuota - $terpakai) : null,
+            'jadwal_buka' => $earliestOpen?->toDateString(),
+            'jadwal_tutup' => $latestClose?->toDateString(),
+            'tracks' => $tracksData,
         ];
     }
 }
