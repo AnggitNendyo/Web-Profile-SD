@@ -29,7 +29,7 @@ const thumbnailUrl = computed(() => {
 </script>
 
 <template>
-    <Link :href="`/berita/${news.slug}`" class="group flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 hover:-translate-y-1">
+    <Link :href="`/berita/${news.slug}`" class="group flex flex-col h-full bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 hover:-translate-y-1">
         <!-- Thumbnail -->
         <div class="relative h-48 overflow-hidden bg-slate-200">
             <img :src="thumbnailUrl" :alt="news.title" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />

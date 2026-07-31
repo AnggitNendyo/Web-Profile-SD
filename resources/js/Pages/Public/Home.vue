@@ -341,7 +341,7 @@ const slideTeacher = (direction) => slide(teacherSlider.value, direction);
                     <div
                         v-for="news in latestNews"
                         :key="news.id"
-                        class="snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%]"
+                        class="snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%] h-full"
                     >
                         <NewsCard :news="news" />
                     </div>
@@ -401,7 +401,7 @@ const slideTeacher = (direction) => slide(teacherSlider.value, direction);
                     <div
                         v-for="fac in facilities"
                         :key="fac.id"
-                        class="group snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%] bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-indigo-100 transition-all duration-300"
+                        class="group snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%] bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-indigo-100 transition-all duration-300 flex flex-col h-full"
                     >
                         <!-- Foto / fallback ikon -->
                         <div class="relative h-52 overflow-hidden bg-indigo-50">
@@ -481,7 +481,7 @@ const slideTeacher = (direction) => slide(teacherSlider.value, direction);
                     <div
                         v-for="item in extracurriculars"
                         :key="item.id"
-                        class="group snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%] bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 flex flex-col"
+                        class="group snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%] bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 flex flex-col h-full"
                     >
                         <div class="relative h-44 overflow-hidden bg-indigo-100">
                             <img
