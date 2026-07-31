@@ -80,10 +80,11 @@ const ctaImage = computed(() => {
         : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2022&auto=format&fit=crop';
 });
 
-// Slider horizontal (dipakai Berita, Ekstrakurikuler, Fasilitas)
+// Slider horizontal (dipakai Berita, Ekstrakurikuler, Fasilitas, Guru)
 const newsSlider = ref(null);
 const extraSlider = ref(null);
 const facilitySlider = ref(null);
+const teacherSlider = ref(null);
 
 const formatSchedule = (buka, tutup) => {
     if (buka && tutup) {
@@ -107,6 +108,7 @@ const slide = (el, direction) => {
 const slideNews = (direction) => slide(newsSlider.value, direction);
 const slideExtra = (direction) => slide(extraSlider.value, direction);
 const slideFacilities = (direction) => slide(facilitySlider.value, direction);
+const slideTeacher = (direction) => slide(teacherSlider.value, direction);
 </script>
 
 <template>
@@ -362,6 +364,12 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
                     </SectionHeading>
                     <!-- Kontrol Slider (desktop) -->
                     <div class="hidden md:flex items-center gap-3 mt-4 md:mt-0">
+                        <Link href="/profil#fasilitas" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
+                            Lihat Semua
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </Link>
                         <button
                             type="button"
                             @click="slideFacilities(-1)"
@@ -522,22 +530,47 @@ const slideFacilities = (direction) => slide(facilitySlider.value, direction);
                     <SectionHeading eyebrow="Tim Pendidik" title="Guru &amp; Staf Kami" class="max-w-2xl">
                         Tenaga pendidik profesional dan berdedikasi untuk masa depan peserta didik.
                     </SectionHeading>
-                    <Link href="/guru-staf" class="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm mt-4 md:mt-0">
-                        Lihat Semua
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </Link>
+                    <div class="hidden md:flex items-center gap-3 mt-4 md:mt-0">
+                        <Link href="/guru-staf" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
+                            Lihat Semua
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </Link>
+                        <button
+                            type="button"
+                            @click="slideTeacher(-1)"
+                            class="w-11 h-11 rounded-full bg-white border border-slate-200 text-slate-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all shadow-sm"
+                            aria-label="Sebelumnya"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                        </button>
+                        <button
+                            type="button"
+                            @click="slideTeacher(1)"
+                            class="w-11 h-11 rounded-full bg-white border border-slate-200 text-slate-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all shadow-sm"
+                            aria-label="Berikutnya"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <TeacherCard
-                        v-for="(teacher, index) in teachers"
+                <div
+                    ref="teacherSlider"
+                    class="grid grid-rows-2 grid-flow-col gap-6 overflow-x-auto auto-cols-max snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 md:mx-0 md:px-0 facility-scroll"
+                >
+                    <div
+                        v-for="teacher in teachers"
                         :key="teacher.id"
-                        :teacher="teacher"
-                        data-aos="fade-up"
-                        :data-aos-delay="(index % 4) * 80"
-                    />
+                        class="snap-start w-[85vw] sm:w-[45vw] lg:w-[280px]"
+                    >
+                        <TeacherCard :teacher="teacher" class="h-full" />
+                    </div>
                 </div>
 
                 <div class="mt-8 text-center md:hidden">

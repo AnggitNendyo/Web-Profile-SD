@@ -23,7 +23,7 @@ class HomeController extends Controller
                 ->latest('published_at')
                 ->take(6)
                 ->get(),
-            'teachers'         => Teacher::orderBy('sort_order')->take(8)->get(),
+            'teachers'         => Teacher::orderBy('sort_order')->get(),
             'extracurriculars' => Extracurricular::orderBy('sort_order')->take(6)->get(),
             'facilities'       => Facility::orderBy('order_index')->take(6)->get(),
             'visiMisi'         => Page::where('slug', 'visi-misi')->first(),
