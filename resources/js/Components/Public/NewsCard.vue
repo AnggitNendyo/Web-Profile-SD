@@ -57,11 +57,11 @@ const thumbnailUrl = computed(() => {
                 </div>
             </div>
             
-            <h3 class="font-display text-xl font-semibold text-slate-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+            <h3 class="font-display text-xl font-semibold text-slate-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors min-h-[3.5rem]">
                 {{ news.title }}
             </h3>
             
-            <p class="text-slate-600 text-sm line-clamp-3 mb-6 flex-grow">
+            <p class="text-slate-600 text-sm line-clamp-3 mb-6 flex-grow min-h-[3.75rem]">
                 {{ excerpt }}
             </p>
             

@@ -338,13 +338,12 @@ const slideTeacher = (direction) => slide(teacherSlider.value, direction);
                     ref="newsSlider"
                     class="flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 md:mx-0 md:px-0 facility-scroll"
                 >
-                    <div
+                    <NewsCard
                         v-for="news in latestNews"
                         :key="news.id"
-                        class="snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%] h-full"
-                    >
-                        <NewsCard :news="news" />
-                    </div>
+                        :news="news"
+                        class="snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%]"
+                    />
                 </div>
 
                 <div class="mt-10 text-center md:hidden">
